@@ -270,6 +270,41 @@ body {
   height: 426px;
 }
 
+#live-date{
+  color: #6e7891;
+  float: right;
+}
+
+.hovertext {
+  position: relative;
+  cursor: default;
+}
+
+.hovertext:before {
+  content: attr(data-hover);
+  visibility: hidden;
+  opacity: 0;
+  width: 140px;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  transition: opacity 1s ease-in-out;
+  background: #141824;
+  border-radius: 5px;
+  border: solid #3e465b;
+  border-width: 1px;
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 110%;
+}
+
+.hovertext:hover:before {
+  opacity: 1;
+  visibility: visible;
+  margin-left: 10%;
+}
+
 @media(min-width:768px) {
   #wrapper {
     padding-left: 0;
