@@ -1,0 +1,69 @@
+<html>
+
+<head>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="login.css">
+
+</head>
+
+<body>
+
+    <main>
+        <div class="wrapper">
+            <div class="heading">
+                <h1>RM Admin<br>v1.0</h1>
+            </div>
+            <form action="#" class="form-group">
+                <input type="text" placeholder="Identification Key" class="email">
+                <input type="password" placeholder="Password" class="passwd">
+                <button id="open-popup">Forgot password?</button>
+                <a href="index.html" type="submit" class="btn btn-primary">log in</a>
+            </form>
+
+        </div>
+
+        <div id="popup-container">
+            <div class="popup">
+                <h1 class="conte">Contact Form</h1>
+                <p class="contact-f">Please fill out the details below to <b>contact support</b>.</p>
+                <p class="contact-f">Enter your company <b>email</b> and support will send over an email containing a
+                    <b>temporary password</b>, which you can later change.</p>
+                <input type="text" placeholder="Email"></br>
+                <a href="login.html" class="go-back">Return to login</a><br>
+                <button>Send</button>
+            </div>
+        </div>
+
+        <script>
+            var $popupContainer = document.getElementById('popup-container'),
+                $popup = $popupContainer.querySelector('.popup');
+
+            document.getElementById('open-popup').onclick = function () {
+                $popupContainer.querySelector('input').value = ''
+                $popupContainer.style.display = 'block';
+                //fade In 
+                setTimeout(function () {
+                    $popupContainer.style.opacity = 1;
+                }, 100);
+            }
+            $popupContainer.onclick = function () {
+                //fade out 
+                $popupContainer.style.opacity = 0;
+                setTimeout(function () {
+                    $popupContainer.style.display = 'none'
+                }, 900);
+            }
+            $popup.onclick = function (e) {
+                e.stopPropagation();
+            }
+        </script>
+
+    </main>
+
+
+</body>
+
+</html>

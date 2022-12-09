@@ -273,6 +273,7 @@ body {
 #live-date{
   color: #6e7891;
   float: right;
+  font-weight: 500;
 }
 
 .hovertext {
