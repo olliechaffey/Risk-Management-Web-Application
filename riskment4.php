@@ -53,7 +53,7 @@
 
 <body>
     <div class="container-fluid">
-        <form class="insert-form" id="insert-form" method="post" action="action.php">
+        <form class="insert-form" id="insert-form" method="post" action="action_riskment.php">
             <hr>
             <h1 class="text-center">Insert Data</h1>
             <hr>
@@ -88,6 +88,39 @@
 
             </div>
         </form>
+        <table class="table table-striped">
+            <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Task</th>
+                <th>Impact</th>
+                <th>Likelihood</th>
+                <th>Risk</th>
+                <th>Risk Owner</th>
+            </tr>
+            <?php
+                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+            
+                $select = "SELECT * FROM risk_assessment ORDER BY id DESC";
+                $result = mysqli_query($conn, $select);
+                while ($row = mysqli_fetch_array($result)) {
+            ?>
+
+            <tr>
+                <td><?php echo $row['title']; ?></td>
+                <td><?php echo $row['status']; ?></td>
+                <td><?php echo $row['task']; ?></td>
+                <td><?php echo $row['impact']; ?></td>
+                <td><?php echo $row['likelihood']; ?></td>
+                <td><?php echo $row['risk']; ?></td>
+                <td><?php echo $row['risk_owner']; ?></td>
+            </tr>
+
+            <?php 
+                }
+            ?>
+
+        </table>
     </div>
 
 
