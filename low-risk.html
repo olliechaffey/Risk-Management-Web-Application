@@ -64,7 +64,7 @@
                 </li>
                 <label class="nav-label">tools</label>
                 <li>
-                    <a class="active" href="riskment.php">Risk Assessment</a>
+                    <a href="riskment.php">Risk Assessment</a>
                 </li>
                 <li>
                     <a href="assets.php">Assets</a>
@@ -74,7 +74,7 @@
                 </li>
                 <label class="nav-label">categories</label>
                 <li>
-                    <a href="low-risk.php">Low Risk</a>
+                    <a class="active" href="low-risk.php">Low Risk</a>
                 </li>
                 <li>
                     <a href="medium-risk.php">Medium Risk</a>
@@ -114,43 +114,30 @@
         <div id="page-content-wrapper">
             <div class="container-fluid">
 
-                <h1 class="heading">Risk Assessment</h1>
+                <h1 class="heading">Low Risk Vulnerabilities</h1>
                 <span id="live-date" class="hovertext" data-hover="MM/DD/YYYY"></span>
                 <script src="scripts.js"></script>
-                <h6 class="sub-heading title-ul">Here’s an overview of the business right now.</h6>
+                <h6 class="sub-heading title-ul">Determine the correct approach to defend low risk vulnerabilities.</h6>
 
-                <form class="insert-form mt-3" id="insert-form" method="post" action="action.php">
-                    <div class="input-field">
-        
-                        <table class="w-100 text-center" id="table_field">
-                            <tr>
-                                <th>Title</th>
-                                <th>Status</th>
-                                <th>Task</th>
-                                <th>Impact</th>
-                                <th>Likelihood</th>
-                                <th>Risk</th>
-                                <th>Risk Owner</th>
-                                <th>Add / Remove</th>
-                            </tr>
-        
-                            <tr>
-                                <td class="pr-2"><input class="form-control" type="text" name="title" required=""></td>
-                                <td class="p-2"><input class="form-control" type="text" name="status" required=""></td>
-                                <td class="p-2"><input class="form-control" type="text" name="task" required=""></td>
-                                <td class="p-2"><select class="form-control" name="impact" required=""><option selected disabled value="">Select</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></td>
-                                <td class="p-2"><select class="form-control" name="likelihood" required=""><option selected disabled value="">Select</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></td>
-                                <td class="p-2"><select class="form-control" name="risk" required=""><option selected disabled value="">Select</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></td>
-                                <td class="p-2"><input class="form-control" type="text" name="risk_owner" required=""></td>
-                                <td class="pl-2"><input class="btn btn-primary btn-block" type="button" name="add" id="add" value="Add"></td>
-                            </tr>
-                        </table>
-                        <div class="d-flex justify-content-center mt-3">
-                            <input class="btn btn-success" type="submit" name="submit" value="Submit Data">
+                <div>
+                    <div class="card bg-dark text-white mt-3">
+                        <div class="card-body">Current total low risk:
+                            <?php
+                                            $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                        
+                                            $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
+                                            $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                            if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                            }else{
+                                                echo '<h2 class="mb-0"> No Data </h2>';
+                                            }
+                                        ?>
                         </div>
-        
                     </div>
-                </form>
+                </div>
+
                 <table class="table table-dark table-responsive-md mt-5">
                     <tr>
                         <th class="text-center" width="5%" scope="col">ID</th>
@@ -165,7 +152,7 @@
                     <?php
                         $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                     
-                        $select = "SELECT * FROM risk_assessment ORDER BY id DESC";
+                        $select = "SELECT * FROM risk_assessment where risk='Low' ORDER BY id DESC";
                         $result = mysqli_query($conn, $select);
                         while ($row = mysqli_fetch_array($result)) {
                     ?>

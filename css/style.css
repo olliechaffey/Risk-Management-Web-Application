@@ -5,11 +5,22 @@
  */
 
 body {
-  background-color: #0f111a !important;
   color: white !important;
   overflow-x: hidden;
 }
 
+.bg-1{
+  background-color: #141824;
+}
+
+.bg-2{
+  background-color: #222834;
+}
+
+.footer{
+  border-top: solid #3e465b;
+  border-width: 1px;
+}
 #wrapper {
   padding-left: 0;
   -webkit-transition: all 0.5s ease;
@@ -32,7 +43,6 @@ body {
   height: 100%;
   margin-left: -250px;
   overflow-y: auto;
-  background: #141824;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -313,10 +323,6 @@ body {
 th{
   color: white;
   justify-content: center;
-}
-
-table {
-  border-radius: 5px !important;
 }
 
 
