@@ -325,27 +325,6 @@ th{
   justify-content: center;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(5, 80px);
-  grid-template-rows: repeat(5, 80px);
-  grid-gap: 5px;
-}
-
-.cell {
-   /* center the cell content */
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  font-family: Arial;
-  font-size: 3rem;
-  font-weight: bold;
-  background: black;
-}
-
-
-
-
 @media(min-width:768px) {
   #wrapper {
     padding-left: 0;

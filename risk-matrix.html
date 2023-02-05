@@ -24,25 +24,25 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-    
+
             var html = '<td><input class="form-control" type="text" name="title" required=""></td><td><input class="form-control" type="text" name="status" required=""></td><td><input class="form-control" type="text" name="task" required=""></td><td><select class="form-control" name="impact" required=""><option selected disabled value="">Select</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></td><td><select class="form-control" name="likelihood" required=""><option selected disabled value="">Select</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></td><td><select class="form-control" name="risk" required=""><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select></td><td><input class="form-control" type="text" name="risk_owner" required=""></td><input class="btn btn-danger" type="button" name="remove" id="remove" value="Remove"></td></tr>';
-    
+
             var max = 4;
             var x = 1;
-    
-            $('#add').click(function(){
-                if(x <= max){
+
+            $('#add').click(function () {
+                if (x <= max) {
                     $("#table_field").append(html);
                     x++;
                 }
             });
-    
-            $('#table_field').on('click','#remove',function(){
+
+            $('#table_field').on('click', '#remove', function () {
                 $(this).closest('tr').remove();
                 x--;
             });
         });
-    
+
     </script>
 </head>
 
@@ -123,28 +123,30 @@
                 <script src="scripts.js"></script>
                 <h6 class="sub-heading title-ul">Here’s an overview of the business right now.</h6>
 
-                
-                    <div class="grid justify-content-center mt-5">
-                        <div class="row" style="width: 500px; height: 100px;">
-                            <div class="col d-flex justify-content-center align-items-center" id="1" style="background-color: #DBD06D;">
-                                <?php
-                                                        $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                                                    
-                                                        $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                                        $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-                        
-                                                        if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                                            echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                                        }else{
-                                                            echo '<h2 class="mb-0"> </h2>';
-                                                        }
-                                                    ?>
-                            </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="2" style="background-color: #F3BE6D;">
-                                <?php
+                <div class="container">
+                <div class="grid justify-content-center mt-5">
+                    <div class="row" style="width: 500px; height: 100px;">
+                        <div class="col d-flex justify-content-center align-items-center" id="1"
+                            style="background-color: #DBD06D;">
+                            <a href="#"><?php
                                 $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                             
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Very Low' AND likelihood='Very Likely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?></a>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="2"
+                            style="background-color: #F3BE6D;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Low' AND likelihood='Very Likely'";
                                 $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
 
                                 if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
@@ -154,11 +156,12 @@
                                 }
                             ?>
                         </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="3" style="background-color: #F36969;">
-                                <?php
+                        <div class="col d-flex justify-content-center align-items-center" id="3"
+                            style="background-color: #F36969;">
+                            <?php
                                 $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                             
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Medium' AND likelihood='Very Likely'";
                                 $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
 
                                 if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
@@ -168,11 +171,12 @@
                                 }
                             ?>
                         </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="4" style="background-color: #DB3F3F;">
-                                <?php
+                        <div class="col d-flex justify-content-center align-items-center" id="4"
+                            style="background-color: #DB3F3F;">
+                            <?php
                                 $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                             
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='High' AND likelihood='Very Likely'";
                                 $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
 
                                 if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
@@ -182,11 +186,12 @@
                                 }
                             ?>
                         </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="5" style="background-color: #FF0000;">
-                                <?php
+                        <div class="col d-flex justify-content-center align-items-center" id="5"
+                            style="background-color: #FF0000;">
+                            <?php
                                 $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                             
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Very High' AND likelihood='Very Likely'";
                                 $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
 
                                 if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
@@ -195,297 +200,318 @@
                                     echo '<h2 class="mb-0"> </h2>';
                                 }
                             ?>
-                        </div>
-                        </div>
-                        <div class="row" style="width: 500px; height: 100px;">
-                            <div class="col d-flex justify-content-center align-items-center" id="1" style="background-color: #DBD06D;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="2" style="background-color: #DBD06D;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="3" style="background-color: #F3BE6D;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="4" style="background-color: #F36969;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="5" style="background-color: #DB3F3F;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                        </div>
-                        <div class="row" style="width: 500px; height: 100px;">
-                            <div class="col d-flex justify-content-center align-items-center" id="1" style="background-color: #69CD59;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="2" style="background-color: #DBD06D;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="3" style="background-color: #DBD06D;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="4" style="background-color: #F3BE6D;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="5" style="background-color: #F36969;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                        </div>
-                        <div class="row" style="width: 500px; height: 100px;">
-                            <div class="col d-flex justify-content-center align-items-center" id="1" style="background-color: #399B29;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="2" style="background-color: #69CD59;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="3" style="background-color: #DBD06D;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="4" style="background-color: #DBD06D;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="5" style="background-color: #F3BE6D;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                        </div>
-                        <div class="row" style="width: 500px; height: 100px;">
-                            <div class="col d-flex justify-content-center align-items-center" id="1" style="background-color: #05691B;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="2" style="background-color: #399B29;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="3" style="background-color: #69CD59;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="4" style="background-color: #DBD06D;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
-                            <div class="col d-flex justify-content-center align-items-center" id="5" style="background-color: #DBD06D;">
-                                <?php
-                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                            
-                                $dash_riskcount_query = "SELECT * from risk_assessment where risk='Low'";
-                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
-
-                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
-                                }else{
-                                    echo '<h2 class="mb-0"> </h2>';
-                                }
-                            ?>
-                        </div>
                         </div>
                     </div>
+                    <div class="row" style="width: 500px; height: 100px;">
+                        <div class="col d-flex justify-content-center align-items-center" id="1"
+                            style="background-color: #DBD06D;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Very Low' AND likelihood='Likely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="2"
+                            style="background-color: #DBD06D;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Low' AND likelihood='Likely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="3"
+                            style="background-color: #F3BE6D;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Medium' AND likelihood='Likely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="4"
+                            style="background-color: #F36969;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='High' AND likelihood='Likely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="5"
+                            style="background-color: #DB3F3F;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Very High' AND likelihood='Likely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row" style="width: 500px; height: 100px;">
+                        <div class="col d-flex justify-content-center align-items-center" id="1"
+                            style="background-color: #69CD59;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Very Low' AND likelihood='Possible'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="2"
+                            style="background-color: #DBD06D;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Low' AND likelihood='Possible'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="3"
+                            style="background-color: #DBD06D;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Medium' AND likelihood='Possible'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="4"
+                            style="background-color: #F3BE6D;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='High' AND likelihood='Possible'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="5"
+                            style="background-color: #F36969;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Very High' AND likelihood='Possible'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row" style="width: 500px; height: 100px;">
+                        <div class="col d-flex justify-content-center align-items-center" id="1"
+                            style="background-color: #399B29;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Very Low' AND likelihood='Unlikely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="2"
+                            style="background-color: #69CD59;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Low' AND likelihood='Unlikely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="3"
+                            style="background-color: #DBD06D;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Medium' AND likelihood='Unlikely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="4"
+                            style="background-color: #DBD06D;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='High' AND likelihood='Unlikely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="5"
+                            style="background-color: #F3BE6D;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Very High' AND likelihood='Unlikely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row" style="width: 500px; height: 100px;">
+                        <div class="col d-flex justify-content-center align-items-center" id="1"
+                            style="background-color: #05691B;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Very Low' AND likelihood='Very Unlikely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="2"
+                            style="background-color: #399B29;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Low' AND likelihood='Very Unlikely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="3"
+                            style="background-color: #69CD59;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Medium' AND likelihood='Very Unlikely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="4"
+                            style="background-color: #DBD06D;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='High' AND likelihood='Very Unlikely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                        <div class="col d-flex justify-content-center align-items-center" id="5"
+                            style="background-color: #DBD06D;">
+                            <?php
+                                $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                            
+                                $dash_riskcount_query = "SELECT * from risk_assessment where impact='Very High' AND likelihood='Very Unlikely'";
+                                $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+
+                                if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                    echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                }else{
+                                    echo '<h2 class="mb-0"> </h2>';
+                                }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
             </div>

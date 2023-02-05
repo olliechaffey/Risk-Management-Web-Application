@@ -136,12 +136,12 @@
         
                             <tr>
                                 <td class="pr-2"><input class="form-control" type="text" name="title" required=""></td>
-                                <td class="p-2"><input class="form-control" type="text" name="status" required=""></td>
+                                <td class="p-2"><input class="form-control" type="text" name="status" required="" onkeydown="return /[a-z-]/i.test(event.key)"></td>
                                 <td class="p-2"><input class="form-control" type="text" name="task" required=""></td>
-                                <td class="p-2"><select class="form-control" name="impact" required=""><option selected disabled value="">Select</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></td>
-                                <td class="p-2"><select class="form-control" name="likelihood" required=""><option selected disabled value="">Select</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></td>
+                                <td class="p-2"><select class="form-control" name="impact" required=""><option selected disabled value="">Select</option><option value="Very Low">Very Low</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option><option value="Very High">Very High</option></select></td>
+                                <td class="p-2"><select class="form-control" name="likelihood" required=""><option selected disabled value="">Select</option><option value="Very Unlikely">Very Unlikely</option><option value="Unlikely">Unlikely</option><option value="Possible">Possible</option><option value="Likely">Likely</option><option value="Very Likely">Very Likely</option></select></td>
                                 <td class="p-2"><select class="form-control" name="risk" required=""><option selected disabled value="">Select</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></td>
-                                <td class="p-2"><input class="form-control" type="text" name="risk_owner" required=""></td>
+                                <td class="p-2"><input class="form-control" type="text" name="risk_owner" required="" onkeydown="return /[a-z-]/i.test(event.key)"></td>
                                 <td class="pl-2"><input class="btn btn-primary btn-block" type="button" name="add" id="add" value="Add"></td>
                             </tr>
                         </table>
