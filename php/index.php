@@ -1,3 +1,10 @@
+<?php require_once 'connection.php' ?>
+<?php
+
+    $query = "SELECT risk, count(*) as number FROM risk_assessment GROUP BY risk";
+    $result = mysqli_query($conn, $query);
+                            ?>
+
 <!doctype html>
 <html lang="en">
 
@@ -13,6 +20,43 @@
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <script src="https://kit.fontawesome.com/8c8e392149.js" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Risk', 'Number'],
+
+          <?php
+
+            while ($row = mysqli_fetch_array($result)) {
+                echo "['".$row["risk"]."', ".$row["number"]."],";
+          }
+
+          ?>
+
+        ]);
+
+        var options = {
+          //title: 'Risk Pie Chart',
+          pieHole: 0.4,
+          backgroundColor: 'transparent',
+          slices: [{color: '#F99D9D'}, {color: '#7ABD6A'}, {color: '#DEAC61'}],
+          //is3D: true,
+          fontSize: ['12'],
+          chartArea: {left:20,top:50,bottom:50,width:'100%',height:'100%'},
+          legend: {textStyle: {color: 'white'}}
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+        chart.draw(data, options);
+      }
+    </script>
 
 </head>
 
@@ -184,7 +228,7 @@
                                     <?php
                                                     $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                                                 
-                                                    $dash_riskcount_query = "SELECT * from risk_assessment";
+                                                    $dash_riskcount_query = "SELECT * from company_assets";
                                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
 
                                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
@@ -201,48 +245,32 @@
                             </div>
                         </div>
                     </div>
-
-                <div class="container-charts">
-
-                    <div class="container-charts-left">
-                        <h3 class="heading-indiv">Risk Wheel</h3>
-                        <h6 class="sub-heading sub-heading-indiv">Explain the pie chart*</h6>
-                    </div>
-                    <div class="container-charts-right">
-                        <h3 class="heading-indiv">Risk Category</h3>
-                        <h6 class="sub-heading sub-heading-indiv">Explain the risk matrix*</h6>
-                    </div>
-
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col bg-2">
+                    <h3 class="heading-indiv">Risk Wheel</h3>
+                    <div id="piechart" style="width: 100%; height: 400px;"></div>
                 </div>
-
-                <div class="container-triple">
-
-                    <div class="container-triple-1">
-                        <h3 class="heading-indiv">Total Assets</h3>
-                        <h6 class="sub-heading sub-heading-indiv">Totol number of assets throughout the business</h6>
-                    </div>
-                    <div class="container-triple-2">
-                        <h3 class="heading-indiv">Local Assets Detected</h3>
-                        <h6 class="sub-heading sub-heading-indiv">Assets / Devices detected on local machine</h6>
-                    </div>
-
-                </div>
-                <div class="container-triple-4">
-                    <div class="container-triple-3">
-                        <h3 class="heading-indiv">Overall Comapany Risk Score</h3>
-                        <h6 class="sub-heading sub-heading-indiv">Calculated risk score over the past year</h6>
-                    </div>
-                </div>
-
-                <div class="container-bottom">
-
-                    <div class="container-bottom-1">
-                        <h3 class="heading-indiv">Overall Comapany Risk Score</h3>
-                        <h6 class="sub-heading sub-heading-indiv">Calculated risk score over the past year</h6>
-                    </div>
-
+                <div class="col">
+                    <h3 class="heading-indiv">Risk Category</h3>
                 </div>
             </div>
+            <div class="row">
+                <div class="col">
+                    <h3 class="heading-indiv">Local Assets Detected</h3>
+                </div>
+                <div class="col bg-2">
+                    <h3 class="heading-indiv">Overall Company Risk Score</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h3 class="heading-indiv">Graph Overtime of Risk Score</h3>
+                </div>
+            </div>
+
         </div>
         <!-- /#page-content-wrapper -->
                 <footer class="bg-2 text-center text-white footer">
