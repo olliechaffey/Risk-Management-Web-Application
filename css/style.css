@@ -10,11 +10,28 @@ body {
 }
 
 .bg-1{
-  background-color: #141824;
+  background-color: #141824 !important;
 }
 
 .bg-2{
+  background-color: #222834 !important;
+}
+
+.bg-2-border{
+  background-color: #222834 !important;
+  border-radius: 1px;
+  border-color: #3e465b !important;
+}
+
+.alert-red{
+  background-color: red !important;
+  border-radius: 10px;
+}
+
+.card-s{
   background-color: #222834;
+  color: white;
+  border-color: #6e7891;
 }
 
 .footer{
@@ -264,15 +281,6 @@ body {
   border-width: 1px;
 }
 
-.heading-indiv {
-  padding-left: 15px;
-  padding-top: 10px;
-}
-
-.sub-heading-indiv {
-  padding-left: 15px;
-}
-
 .container-bottom {
   display: inline-block;
   width: 100%;
@@ -323,6 +331,45 @@ body {
 th{
   color: white;
   justify-content: center;
+}
+
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 25px;
+  background: #ffff;
+  outline: none;
+  opacity: 0.5;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
+td.SqlActive{
+  color: green !important;
 }
 
 @media(min-width:768px) {

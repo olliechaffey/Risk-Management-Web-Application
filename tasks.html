@@ -103,13 +103,16 @@
                 </li>
                 <label class="nav-label">tools</label>
                 <li>
-                    <a href="riskment.php">Risk Assessment</a>
+                    <a href="riskment.php">Risk Register</a>
                 </li>
                 <li>
-                    <a href="assets.php">Assets</a>
+                    <a href="assets.php">Asset Register</a>
                 </li>
                 <li>
-                    <a class="active" href="tasks.php">Tasks</a>
+                    <a class="active" href="tasks.php">Risk Treatment</a>
+                </li>
+                <li>
+                    <a href="audit.php">Audit</a>
                 </li>
                 <label class="nav-label">categories</label>
                 <li>
@@ -152,12 +155,122 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
-
-                <h1 class="heading">Tasks</h1>
+        
+                <h1 class="heading">Risk Treatment</h1>
                 <span id="live-date" class="hovertext" data-hover="MM/DD/YYYY"></span>
                 <script src="scripts.js"></script>
-                <h6 class="sub-heading title-ul">Current active tasks that need to be allocated.</h6>
+                <h6 class="sub-heading title-ul">Status and due date for risk treatments.</h6>
+        
+                <div class="row">
+                    <div class="col-xl col-md-6">
+                        <div class="card bg-2-border text-white mb-4 mt-2">
+                            <div class="card-body">Avoid
+                                <?php
+                                        $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                    
+                                        $dash_riskcount_query = "SELECT * from risk_assessment where status='avoid'";
+                                        $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+        
+                                        if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                            echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        }else{
+                                            echo '<h2 class="mb-0"> No Data </h2>';
+                                        }
+                                    ?>
+                            </div>
+                            <div class="card-footer d-flex align-items-ceneter justify-content-between">
+                                <a class="small text-white stretched-link" href="low-risk.php">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl col-md-6">
+                        <div class="card bg-2-border text-white mb-4 mt-2">
+                            <div class="card-body">Mitigate
+                                <?php
+                                        $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                    
+                                        $dash_riskcount_query = "SELECT * from risk_assessment where status='mitigate'";
+                                        $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+        
+                                        if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                            echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        }else{
+                                            echo '<h2 class="mb-0"> No Data </h2>';
+                                        }
+                                    ?>
+                            </div>
+                            <div class="card-footer d-flex align-items-ceneter justify-content-between">
+                                <a class="small text-white stretched-link" href="medium-risk.php">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl col-md-6">
+                        <div class="card bg-2-border text-white mb-4 mt-2">
+                            <div class="card-body">Transfer
+                                <?php
+                                        $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                    
+                                        $dash_riskcount_query = "SELECT * from risk_assessment where status='transfer'";
+                                        $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+        
+                                        if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                            echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        }else{
+                                            echo '<h2 class="mb-0"> No Data </h2>';
+                                        }
+                                    ?>
+                            </div>
+                            <div class="card-footer d-flex align-items-ceneter justify-content-between">
+                                <a class="small text-white stretched-link" href="high-risk.php">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl col-md-6">
+                        <div class="card bg-2-border text-white mb-4 mt-2">
+                            <div class="card-body">Accept
+                                <?php
+                                        $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                    
+                                        $dash_riskcount_query = "SELECT * from risk_assessment where status='accept'";
+                                        $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+        
+                                        if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                            echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        }else{
+                                            echo '<h2 class="mb-0"> No Data </h2>';
+                                        }
+                                    ?>
+                            </div>
+                            <div class="card-footer d-flex align-items-ceneter justify-content-between">
+                                <a class="small text-white stretched-link" href="riskment.php">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <h3 class="heading-indiv">Risk Tolerance</h3>
+                <p>Drag the slider to point where risks deem acceptable:</p>
+                <input type="range" min="1" max="100" value="" class="slider" id="myRange">
+                <p>Value: <span id="demo"></span></p>
+        
+                <script>
+                    var slider = document.getElementById("myRange");
+                    var output = document.getElementById("demo");
+                    output.innerHTML = slider.value;
 
+                    slider.oninput = function () {
+                        output.innerHTML = this.value;
+                    }
+
+                    if (slider < 50) {
+                        color = red;
+                    }
+                </script>
+        
             </div>
         </div>
         <!-- /#page-content-wrapper -->
