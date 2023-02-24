@@ -54,7 +54,7 @@
         <div id="sidebar-wrapper" class="bg-2">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
-                    <a href="index.php">
+                    <a href="#">
                         RM Tool v.1.0
                     </a>
                 </li>
@@ -64,13 +64,22 @@
                 </li>
                 <label class="nav-label">tools</label>
                 <li>
-                    <a class="active" href="riskment.php">Risk Assessment</a>
+                    <a href="newrisk.php">+ New Risk</a>
                 </li>
                 <li>
-                    <a href="assets.php">Assets</a>
+                    <a class="active" href="riskment.php">Risk Register</a>
                 </li>
                 <li>
-                    <a href="tasks.php">Tasks</a>
+                    <a href="assets.php">Asset Register</a>
+                </li>
+                <li>
+                    <a href="tasks.php">Risk Treatment</a>
+                </li>
+                <li>
+                    <a href="trends.php">Trends</a>
+                </li>
+                <li>
+                    <a href="audit.php">Audit</a>
                 </li>
                 <label class="nav-label">categories</label>
                 <li>
@@ -130,18 +139,16 @@
                                 <th>Impact</th>
                                 <th>Likelihood</th>
                                 <th>Risk</th>
-                                <th>Asset</th>
                                 <th>Risk Owner</th>
                                 <th>Add / Remove</th>
                             </tr>
         
                             <tr>
                                 <td class="pr-2"><input class="form-control bg-2-border text-white" type="text" name="title" required=""></td>
-                                <td class="p-2"><select class="form-control bg-2-border text-white" type="text" name="status" required=""><option selected disabled value="">Select</option><option value="avoid">Avoid</option><option value="mitigate">Mitigate</option><option value="transfer">Transfer</option><option value="accept">Accept</option></select></td>
+                                <td class="p-2"><select class="form-control bg-2-border text-white" type="text" name="status" required=""><option selected disabled value="">Select</option><option value="In Review">In Review</option><option value="Mitigate">Mitigate</option><option value="Transfer">Transfer</option></select></td>
                                 <td class="p-2"><input class="form-control bg-2-border text-white" type="text" name="task" required=""></td>
                                 <td class="p-2"><select class="form-control bg-2-border text-white" name="impact" required=""><option selected disabled value="">Select</option><option value="Very Low">Very Low</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option><option value="Very High">Very High</option></select></td>
                                 <td class="p-2"><select class="form-control bg-2-border text-white" name="likelihood" required=""><option selected disabled value="">Select</option><option value="Very Unlikely">Very Unlikely</option><option value="Unlikely">Unlikely</option><option value="Possible">Possible</option><option value="Likely">Likely</option><option value="Very Likely">Very Likely</option></select></td>
-                                <td class="p-2"><select class="form-control bg-2-border text-white" name="risk" required=""><option selected disabled value="">Select</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></td>
                                 <td class="p-2"><select class="form-control bg-2-border text-white" name="risk" required=""><option selected disabled value="">Select</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></td>
                                 <td class="p-2"><input class="form-control bg-2-border text-white" type="text" name="risk_owner" required="" onkeydown="return /[a-z-]/i.test(event.key)"></td>
                                 <td class="pl-2"><input class="btn btn-primary btn-block" type="button" name="add" id="add" value="Add"></td>
@@ -153,7 +160,8 @@
         
                     </div>
                 </form>
-                <table class="table table-dark table-responsive-md mt-5">
+                <table class="table rounded table-striped table-dark table-responsive-md mt-5 table-hover">
+                    <thead>
                     <tr>
                         <th class="text-center" width="5%" scope="col">ID</th>
                         <th width="20%" scope="col">Title</th>
@@ -164,6 +172,7 @@
                         <th class="text-center" scope="col">Risk</th>
                         <th scope="col">Risk Owner</th>
                     </tr>
+                </thead>
                     <?php
                         $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                     
@@ -173,13 +182,33 @@
                     ?>
         
                     <tr>
-                        <th class="text-center" scope="col"><?php echo $row['id']; ?></th>
+                        <th class="opacity-50 text-center" scope="col"><?php echo $row['id']; ?></th>
                         <td><?php echo $row['title']; ?></td>
-                        <td class="text-center"><?php echo $row['status']; ?></td>
+                        <td><p class="text-center <?php if($row['status'] == 'In Review'){
+                            echo 'text-center alert-orange';
+                        }elseif($row['status'] == 'Mitigate'){
+                            echo 'text-center alert-red';
+                        }elseif($row['status'] == 'Transfer'){
+                            echo 'text-center alert-blue';
+                        }elseif($row['status'] == 'Done'){
+                            echo 'text-center alert-green';
+                        }else{
+                            echo 'text-center status-s';
+                        }
+                        ?>"><?php echo $row['status']; ?></p></td>
                         <td><?php echo $row['task']; ?></td>
                         <td class="text-center"><?php echo $row['impact']; ?></td>
                         <td class="text-center"><?php echo $row['likelihood']; ?></td>
-                        <td class="text-center"><?php echo $row['risk']; ?></td>
+                        <td><p class="text-center <?php if($row['risk'] == 'High'){
+                            echo 'alert-red';
+                        }elseif ($row['risk'] == 'Medium'){
+                            echo 'alert-orange';
+                        }elseif ($row['risk'] == 'Low'){
+                            echo 'alert-green';
+                        }else{
+                            echo 'null';
+                        }
+                        ?>"><?php echo $row['risk']; ?></p></td>
                         <td><?php echo $row['risk_owner']; ?></td>
                     </tr>
         

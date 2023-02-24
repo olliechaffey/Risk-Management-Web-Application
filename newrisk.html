@@ -42,7 +42,7 @@
                 </li>
                 <label class="nav-label">tools</label>
                 <li>
-                    <a class="active" href="newrisk.php">Report New Risk</a>
+                    <a class="active" href="newrisk.php">+ New Risk</a>
                 </li>
                 <li>
                     <a href="riskment.php">Risk Register</a>
@@ -106,59 +106,75 @@
                 <script src="scripts.js"></script>
                 <h6 class="sub-heading title-ul">Here’s an overview of the business right now.</h6>
 
-                <form class="mt-3">
+                <form class="insert-form mt-3" id="insert-form" method="post" action="action.php">
                     <div class="form-group">
-                        <label for="exampleFormControlInput1">Title</label>
-                        <input type="email" class="form-control bg-2-border text-white" id="exampleFormControlInput1"
-                            placeholder="Enter title for risk...">
+                          <label class="form-label select-label">Title</label>
+                        <input type="text" class="form-control bg-2-border text-white" name="title"
+                            placeholder="Enter title for risk..." required="">
                     </div>
                     <div class="row">
-                        <div class="col-8"><label for="exampleFormControlTextarea1">Description (task)</label>
-                            <textarea class="form-control bg-2-border text-white" id="exampleFormControlTextarea1" rows="12"
-                                placeholder="Summerise the risk..."></textarea></div>
+                        <div class="col-4"><label for="exampleFormControlTextarea1">Description (task)</label>
+                            <textarea class="form-control bg-2-border text-white" name="task" rows="8"
+                                placeholder="Summerise the risk..." required=""></textarea></div>
+                                <div class="col-4">
+                                    <div class="form-group col">
+                                        <label for="exampleFormControlSelect1">Status</label>
+                                        <select class="form-control bg-2-border text-white" name="status" required="">
+                                            <option selected disabled value="">Select</option>
+                                            <option>In Review</option>
+                                            <option>Mitigate</option>
+                                            <option>Transfer</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col">
+                                        <label for="exampleFormControlSelect1">Assets at risk</label>
+                                        <select class="form-control bg-2-border text-white" name="assets">
+                                            <option selected disabled value="">Select</option>
+                                            <option><?php echo $row['title']; ?></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col">
+                                        <label for="exampleFormControlSelect1">Impact</label>
+                                        <select class="form-control bg-2-border text-white" name="impact" required="">
+                                            <option selected disabled value="">Select</option>
+                                            <option value="Very Low">Very Low</option>
+                                            <option value="Low">Low</option>
+                                            <option value="Medium">Medium</option>
+                                            <option value="High">High</option>
+                                            <option value="Very High">Very High</option>
+                                        </select>
+                                    </div>
+                                </div>
                         <div class="col-4">
                             <div class="form-group col">
-                                <label for="exampleFormControlSelect1">Impact</label>
-                                <select class="form-control bg-2-border text-white" id="exampleFormControlSelect1" required="">
-                                    <option selected disabled value="">Select</option>
-                                    <option>In Review</option>
-                                    <option>Mitigate</option>
-                                    <option>Transfer</option>
-                                </select>
-                            </div>
-                            <div class="form-group col">
                                 <label for="exampleFormControlSelect1">Likelihood</label>
-                                <select class="form-control bg-2-border text-white" id="exampleFormControlSelect1" required="">
+                                <select class="form-control bg-2-border text-white" name="likelihood" required="">
                                     <option selected disabled value="">Select</option>
-                                    <option>In Review</option>
-                                    <option>Mitigate</option>
-                                    <option>Transfer</option>
+                                    <option value="Very Unlikely">Very Unlikely</option>
+                                    <option value="Unlikely">Unlikely</option>
+                                    <option value="Possible">Possible</option>
+                                    <option value="Likely">Likely</option>
+                                    <option value="Very Likely">Very Likely</option>
                                 </select>
                             </div>
                             <div class="form-group col">
                                 <label for="exampleFormControlSelect1">Risk</label>
-                                <select class="form-control bg-2-border text-white" id="exampleFormControlSelect1" required="">
+                                <select class="form-control bg-2-border text-white" name="risk" required="">
                                     <option selected disabled value="">Select</option>
-                                    <option>In Review</option>
-                                    <option>Mitigate</option>
-                                    <option>Transfer</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
                                 </select>
                             </div>
                             <div class="form-group col">
                                 <label for="exampleFormControlInput1">Risk Owner</label>
-                                <input type="email" class="form-control bg-2-border text-white" id="exampleFormControlInput1"
+                                <input type="text" class="form-control bg-2-border text-white" name="risk_owner"
                                     placeholder="Enter title for risk...">
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="exampleFormControlSelect1">Status: Is the risk rource your control</label>
-                        <select class="form-control bg-2-border text-white" id="exampleFormControlSelect1" required="">
-                            <option selected disabled value="">Select</option>
-                            <option>In Review</option>
-                            <option>Mitigate</option>
-                            <option>Transfer</option>
-                        </select>
+                    <div class="d-flex justify-content-center mt-3">
+                        <input class="btn btn-success" type="submit" name="submit" value="Submit Data">
                     </div>
                 </form>
             </div>

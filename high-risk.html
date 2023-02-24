@@ -64,13 +64,22 @@
                 </li>
                 <label class="nav-label">tools</label>
                 <li>
-                    <a href="riskment.php">Risk Assessment</a>
+                    <a href="newrisk.php">+ New Risk</a>
                 </li>
                 <li>
-                    <a href="assets.php">Assets</a>
+                    <a href="riskment.php">Risk Register</a>
                 </li>
                 <li>
-                    <a href="tasks.php">Tasks</a>
+                    <a href="assets.php">Asset Register</a>
+                </li>
+                <li>
+                    <a href="tasks.php">Risk Treatment</a>
+                </li>
+                <li>
+                    <a href="trends.php">Trends</a>
+                </li>
+                <li>
+                    <a href="audit.php">Audit</a>
                 </li>
                 <label class="nav-label">categories</label>
                 <li>
@@ -138,7 +147,8 @@
                     </div>
                 </div>
 
-                <table class="table table-dark table-responsive-md mt-4">
+                <table class="table rounded table-striped table-dark table-responsive-md mt-4 table-hover">
+                    <thead>
                     <tr>
                         <th class="text-center" width="5%" scope="col">ID</th>
                         <th width="20%" scope="col">Title</th>
@@ -149,6 +159,7 @@
                         <th class="text-center" scope="col">Risk</th>
                         <th scope="col">Risk Owner</th>
                     </tr>
+                </thead>
                     <?php
                         $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                     

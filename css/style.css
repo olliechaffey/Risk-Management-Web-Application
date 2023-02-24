@@ -25,7 +25,57 @@ body {
 
 .alert-red{
   background-color: red !important;
-  border-radius: 10px;
+  color: white;
+  text-shadow: 1px 1px black;
+  width: 75px;
+  border-radius: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.alert-orange{
+  background-color: orange !important;
+  color: white;
+  text-shadow: 1px 1px black;
+  width: 75px;
+  border-radius: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.alert-green{
+  background-color: green !important;
+  color: white;
+  text-shadow: 1px 1px black;
+  width: 75px;
+  border-radius: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.alert-blue{
+  background-color: blue !important;
+  color: white;
+  text-shadow: 1px 1px black;
+  width: 75px;
+  border-radius: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.status-s{
+  background-color: grey !important;
+  color: white;
+  text-shadow: 1px 1px black;
+  width: 75px;
+  border-radius: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+p{
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .card-s{
@@ -370,6 +420,22 @@ th{
 
 td.SqlActive{
   color: green !important;
+}
+
+.form-group{
+  padding:10px;
+  border:2px solid;
+  margin:10px;
+}
+.form-group>label{
+  position:absolute;
+  top:-1px;
+  left:20px;
+  background-color:white;
+}
+
+.form-group>input{
+  border:none;
 }
 
 @media(min-width:768px) {
