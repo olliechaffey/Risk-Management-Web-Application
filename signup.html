@@ -35,38 +35,51 @@
         <form action="includes/signup.inc.php" method="post">
             <div class="row">
                 <div class="col">
-                    <div class="m-2">
-                        <input class="form-control bg-2-border text-white" type="text" name="name" placeholder="Full name...">
+                    <div class="ml-2 mr-2">
+                        <p class="m-0 p-0" style="color:red;">*</p>
+                        <input class="form-control bg-2-border text-white" type="text" name="name" placeholder="Full Name">
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
-                    <div class="mt-2 mb-2 ml-2">
-                        <input class="form-control bg-2-border text-white" type="text" name="uid" placeholder="Username...">
+                    <div class="ml-2">
+                        <p class="m-0 p-0" style="color:red;">*</p>
+                        <input class="form-control bg-2-border text-white" type="text" name="uid" placeholder="Username">
                     </div>
                 </div>
                 <div class="col">
-                    <div class="mr-2 mt-2 mb-2">
-                        <input class="form-control bg-2-border text-white" type="text" name="pwd" placeholder="Team code...">
+                    <div class="mr-2">
+                        <p class="m-0 p-0" style="opacity: 0; cursor: default;">*</p>
+                        <input class="form-control bg-2-border text-white" type="text" name="teamid" maxlength="4" placeholder="Team Code">
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
-                    <div class="m-2">
-                        <input class="form-control bg-2-border text-white" type="text" name="email" placeholder="Email...">
+                    <div class="ml-2 mr-2">
+                        <p class="m-0 p-0" style="color:red;">*</p>
+                        <input class="form-control bg-2-border text-white" type="text" name="email" placeholder="E-mail">
                     </div>
-                    <div class="m-2">
-                        <input class="form-control bg-2-border text-white" type="password" name="pwd" placeholder="Password...">
+                    <div class="ml-2 mr-2">
+                        <p class="m-0 p-0" style="color:red;">*</p>
+                        <input class="form-control bg-2-border text-white" type="password" name="pwd" placeholder="Password">
                     </div>
-                    <div class="m-2">
+                    <div class="ml-2 mr-2 mb-2">
+                        <p class="m-0 p-0" style="color:red;">*</p>
                         <input class="form-control bg-2-border text-white" type="password" name="pwdrepeat"
                             placeholder="Repeat Password...">
                     </div>
                 </div>
             </div>
-            <button class="m-2 btn btn-success" type="submit" name="submit">Sign Up</button>
+            <div class="row">
+                <div class="col">
+                    <div class="d-flex align-items-center justify-content-center m-2">
+                        <button class="mr-2 btn btn-primary" type="submit" name="submit">Sign Up</button>
+                        <button class="ml-2 btn bg-2-border text-white" onclick="location.href='https://oc277.brighton.domains/fyp/login.php'" type="button" name="signup">Log In</button>
+                    </div>
+                </div>
+            </div>
         </form>
         <div class="m-2">
             <p class="" style="color: #6e7891;">

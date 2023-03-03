@@ -1,3 +1,14 @@
+<?php 
+    session_start();
+    include 'includes/dbh.inc.php';
+    include "includes/functions.inc.php";
+
+    $username = $_SESSION['useruid'];
+    $_SESSION['username'] = $username;
+    $teamcode = $_SESSION['teamid'];
+    $_SESSION['teamcode'] = $teamcode;
+?> 
+
 <!doctype html>
 <html lang="en">
 
@@ -126,7 +137,7 @@
                 <h1 class="heading">Risk Assessment</h1>
                 <span id="live-date" class="hovertext" data-hover="MM/DD/YYYY"></span>
                 <script src="scripts.js"></script>
-                <h6 class="sub-heading title-ul">Here’s an overview of the business right now.</h6>
+                <h6 class="sub-heading title-ul">Hello, <?php echo $_SESSION['useruid']; ?></h6>
 
                 <form class="insert-form mt-3" id="insert-form" method="post" action="action.php">
                     <div class="input-field">
@@ -139,7 +150,6 @@
                                 <th>Impact</th>
                                 <th>Likelihood</th>
                                 <th>Risk</th>
-                                <th>Risk Owner</th>
                                 <th>Add / Remove</th>
                             </tr>
         
@@ -150,7 +160,6 @@
                                 <td class="p-2"><select class="form-control bg-2-border text-white" name="impact" required=""><option selected disabled value="">Select</option><option value="Very Low">Very Low</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option><option value="Very High">Very High</option></select></td>
                                 <td class="p-2"><select class="form-control bg-2-border text-white" name="likelihood" required=""><option selected disabled value="">Select</option><option value="Very Unlikely">Very Unlikely</option><option value="Unlikely">Unlikely</option><option value="Possible">Possible</option><option value="Likely">Likely</option><option value="Very Likely">Very Likely</option></select></td>
                                 <td class="p-2"><select class="form-control bg-2-border text-white" name="risk" required=""><option selected disabled value="">Select</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></td>
-                                <td class="p-2"><input class="form-control bg-2-border text-white" type="text" name="risk_owner" required="" onkeydown="return /[a-z-]/i.test(event.key)"></td>
                                 <td class="pl-2"><input class="btn btn-primary btn-block" type="button" name="add" id="add" value="Add"></td>
                             </tr>
                         </table>
@@ -174,9 +183,7 @@
                     </tr>
                 </thead>
                     <?php
-                        $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                    
-                        $select = "SELECT * FROM risk_assessment ORDER BY id DESC";
+                        $select = "SELECT * FROM risk_assessment WHERE teamId = '$teamcode' ORDER BY id DESC";
                         $result = mysqli_query($conn, $select);
                         while ($row = mysqli_fetch_array($result)) {
                     ?>

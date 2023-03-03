@@ -1,9 +1,13 @@
-<?php require_once 'connection.php' ?>
-<?php
+<?php 
+    session_start();
+    include 'includes/dbh.inc.php';
+    include "includes/functions.inc.php";
+?> 
 
+<?php
     $query = "SELECT risk, count(*) as number FROM risk_assessment GROUP BY risk";
     $result = mysqli_query($conn, $query);
-                            ?>
+?>
 
 <!doctype html>
 <html lang="en">
@@ -77,6 +81,9 @@
                 <li>
                     <a class="active" href="index.php">Dashboard</a>
                 </li>
+                <li>
+                    <a href="user-account.php">My Account</a>
+                </li>
                 <label class="nav-label">tools</label>
                 <li>
                     <a href="newrisk.php">+ New Risk</a>
@@ -108,9 +115,6 @@
                 </li>
                 <label class="nav-label">other</label>
                 <li>
-                    <a href="user-account.php">My Account</a>
-                </li>
-                <li>
                     <a href="admin-portal.php">Admin Portal</a>
                 </li>
                 <li>
@@ -120,7 +124,7 @@
                     <a href="settings.php">Settings</a>
                 </li>
                 <li>
-                    <a href="#">Exit</a>
+                    <a href="logout.php">Logout</a>
                 </li>
                 <label class="nav-label">Reference</label>
                 <li>
@@ -141,7 +145,7 @@
                 <h1 class="heading">Dashboard</h1>
                 <span id="live-date" class="hovertext" data-hover="MM/DD/YYYY"></span>
                 <script src="scripts.js"></script>
-                <h6 class="sub-heading title-ul">Here’s an overview of the business right now.</h6>
+                <h6 class="sub-heading title-ul">Hello, <?php echo $_SESSION['useruid']; ?></h6>
 
                     <div class="row">
                         <div class="col-xl col-md-6">

@@ -40,15 +40,15 @@ function pwdMatch($pwd, $pwdRepeat){
     return $result;
 }
 
-function uidExists($conn, $username, $email){
-    $sql = "SELECT * FROM users WHERE usersEmail = '$email' OR usersUid = '$username'";
+function uidExists($conn, $username){
+    $sql = "SELECT * FROM users WHERE usersUid = ? OR usersEmail = ?;";
     $stmt = mysqli_stmt_init($conn);
     if (!mysqli_stmt_prepare($stmt, $sql)){
         header("location: ../signup.php?error=uidfailed");
         exit();
     }
 
-    $stmt -> bind_param("ss", $username, $email);
+    mysqli_stmt_bind_param($stmt, "ss", $username, $username);
     mysqli_stmt_execute($stmt);
     
     $resultData = mysqli_stmt_get_result($stmt);
@@ -63,8 +63,8 @@ function uidExists($conn, $username, $email){
     mysqli_stmt_close($stmt);
 }
 
-function createUser($conn, $name, $email, $username, $pwd){
-    $sql = "INSERT INTO users (usersName, usersEmail, usersUid, usersPwd) VALUES (?,?,?,?)"; //sql injection by filling in the blanks 1:07 video
+function createUser($conn, $name, $email, $username, $team, $pwd){
+    $sql = "INSERT INTO users (usersName, usersEmail, usersUid, teamId, usersPwd) VALUES (?,?,?,?,?);"; //sql injection by filling in the blanks 1:07 video
     $stmt = mysqli_stmt_init($conn);
     if (!mysqli_stmt_prepare($stmt, $sql)){
         header("location: ../signup.php?error=stmtfailed");
@@ -73,7 +73,7 @@ function createUser($conn, $name, $email, $username, $pwd){
 
     $hashed = password_hash($pwd, PASSWORD_DEFAULT);
 
-    $stmt -> bind_param("ssss", $name, $email, $username, $hashed);
+    $stmt -> bind_param("sssss", $name, $email, $username, $team, $hashed);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
     header("location: ../signup.php?error=none");
@@ -108,6 +108,7 @@ function loginUser($conn, $username, $pwd){
         session_start();
         $_SESSION["userid"] = $uidExists["usersId"];
         $_SESSION["useruid"] = $uidExists["usersUid"];
+        $_SESSION["teamid"] = $uidExists["teamId"];
         header("location: ../index.php?");
         exit();
      }
