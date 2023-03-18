@@ -2,9 +2,11 @@
 
 session_start();
 
-if(isset($_SESSION['usersId']))
+if(isset($_SESSION['useruid']))
 {
-	unset($_SESSION['usersId']);
+	unset($_SESSION['userid']);
+	unset($_SESSION['useruid']);
+	unset($_SESSION['teamid']);
 
 }
 

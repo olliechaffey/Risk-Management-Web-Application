@@ -1,3 +1,15 @@
+<?php
+    session_start();
+    include 'includes/dbh.inc.php';
+    include "includes/functions.inc.php";
+
+    if(!isset($_SESSION['useruid']))
+    {
+        header('Location: login.php');
+        exit();
+    }
+?> 
+
 <!doctype html>
 <html lang="en">
 
@@ -60,60 +72,46 @@
                 </li>
                 <label class="nav-label">main</label>
                 <li>
-                    <a href="index.php">Dashboard</a>
+                    <a href="index.php"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="user-account.php"><i class="fa-solid fa-user"></i> My Account</a>
                 </li>
                 <label class="nav-label">tools</label>
                 <li>
-                    <a href="newrisk.php">+ New Risk</a>
+                    <a href="newrisk.php"><i class="fa-solid fa-plus"></i> New Risk</a>
                 </li>
                 <li>
-                    <a href="riskment.php">Risk Register</a>
+                    <a href="riskment.php"><i class="fa-solid fa-bolt"></i> Risk Register</a>
                 </li>
                 <li>
-                    <a href="assets.php">Asset Register</a>
+                    <a href="assets.php"><i class="fa-solid fa-computer-mouse"></i> Asset Register</a>
                 </li>
                 <li>
-                    <a href="tasks.php">Risk Treatment</a>
+                    <a href="tasks.php"><i class="fa-solid fa-list-check"></i> Risk Treatment</a>
                 </li>
                 <li>
-                    <a href="trends.php">Trends</a>
+                    <a href="trends.php"><i class="fa-solid fa-arrow-trend-up"></i> Trends</a>
                 </li>
                 <li>
-                    <a href="audit.php">Audit</a>
+                    <a href="audit.php"><i class="fa-solid fa-file"></i> Audit</a>
                 </li>
                 <label class="nav-label">categories</label>
                 <li>
-                    <a href="low-risk.php">Low Risk</a>
+                    <a href="low-risk.php"><i class="fa-solid fa-gauge-simple"></i> Low Risk</a>
                 </li>
                 <li>
-                    <a href="medium-risk.php">Medium Risk</a>
+                    <a href="medium-risk.php"><i class="fa-solid fa-gauge"></i> Medium Risk</a>
                 </li>
                 <li>
-                    <a class="active" href="high-risk.php">High Risk</a>
+                    <a class="active" href="high-risk.php"><i class="fa-solid fa-gauge-high"></i> High Risk</a>
                 </li>
                 <label class="nav-label">other</label>
                 <li>
-                    <a href="user-account.php">My Account</a>
+                    <a href="settings.php"><i class="fa-solid fa-wrench"></i> Settings</a>
                 </li>
                 <li>
-                    <a href="admin-portal.php">Admin Portal</a>
-                </li>
-                <li>
-                    <a href="support.php">Support</a>
-                </li>
-                <li>
-                    <a href="settings.php">Settings</a>
-                </li>
-                <li>
-                    <a href="#">Exit</a>
-                </li>
-                <label class="nav-label">Reference</label>
-                <li>
-                    <a href="https://github.com/olliechaffey" target="_blank">GitHub</a>
-                </li>
-                <li>
-                    <a href="#">Dissertation</a>
-                </li>
+                    <a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                 </li>
             </ul>
         </div>
