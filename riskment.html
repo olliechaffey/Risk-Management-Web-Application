@@ -63,9 +63,9 @@
     </script>
 </head>
 
-<body class="bg-1">
+<body class="bg-1"">
 
-    <div id="wrapper" class="toggled">
+    <div id="wrapper" class="toggled" style="overflow: auto; height: 100%;">
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper" class="bg-2">
@@ -131,59 +131,69 @@
                 <script src="scripts.js"></script>
                 <h6 class="sub-heading title-ul">Hello, <?php echo $_SESSION['useruid']; ?></h6>
 
-                <form class="insert-form mt-3" id="insert-form" method="post" action="action.php">
-                    <div class="input-field">
-        
-                        <table class="w-100 text-center" id="table_field">
-                            <tr>
-                                <th>Title</th>
-                                <th>Status</th>
-                                <th>Task</th>
-                                <th>Impact</th>
-                                <th>Likelihood</th>
-                                <th>Risk</th>
-                                <th>Add / Remove</th>
-                            </tr>
-        
-                            <tr>
-                                <td class="pr-2"><input class="form-control bg-2-border text-white" type="text" name="title" required=""></td>
-                                <td class="p-2"><select class="form-control bg-2-border text-white" type="text" name="status" required=""><option selected disabled value="">Select</option><option value="In Review">In Review</option><option value="Mitigate">Mitigate</option><option value="Transfer">Transfer</option></select></td>
-                                <td class="p-2"><input class="form-control bg-2-border text-white" type="text" name="task" required=""></td>
-                                <td class="p-2"><select class="form-control bg-2-border text-white" name="impact" required=""><option selected disabled value="">Select</option><option value="Very Low">Very Low</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option><option value="Very High">Very High</option></select></td>
-                                <td class="p-2"><select class="form-control bg-2-border text-white" name="likelihood" required=""><option selected disabled value="">Select</option><option value="Very Unlikely">Very Unlikely</option><option value="Unlikely">Unlikely</option><option value="Possible">Possible</option><option value="Likely">Likely</option><option value="Very Likely">Very Likely</option></select></td>
-                                <td class="p-2"><select class="form-control bg-2-border text-white" name="risk" required=""><option selected disabled value="">Select</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></td>
-                                <td class="pl-2"><input class="btn btn-primary btn-block" type="button" name="add" id="add" value="Add"></td>
-                            </tr>
-                        </table>
-                        <div class="d-flex justify-content-center mt-3">
-                            <input class="btn btn-success" type="submit" name="submit" value="Submit Data">
+                <div class="top-button mt-4">
+                    <form class="form-inline mt-3" id="insert-form" method="post" action="action_delete_risk.php">
+                        <div class="btn-group mr-2" role="group">
+                            <button type="button" class="btn btn-secondary active">Risk Register</button>
+                            <button type="button" class="btn btn-secondary">Risk Matrix</button>
+                          </div>
+                        <div class="mr-2">
+                        <a href="newasset.php"><input class="btn btn-success btn-block" type="button" value="Add"></a>
                         </div>
-        
-                    </div>
-                </form>
-                <table class="table rounded table-striped table-dark table-responsive-md mt-5 table-hover">
+                        <div class="mr-2">
+                        <input class="form-control bg-2-border text-white" type="text" name="id" required="" placeholder="Enter Risk ID...">
+                        </div>
+                        <button class="btn btn-danger" type="submit" name="submit">Delete</button>
+                        <div class="table-filter ml-2">
+                            <span>Status:</span>
+                            <select class="form-control bg-2-border text-white"" id="myList" onchange="myFunction()">
+                                <option selected disabled value="">Select</option>
+                                <option>In Review</option>
+                                <option>Mitigate</option>
+                                <option>Transfer</option>
+                                <option>Done</option>
+                            </select>
+                        </div>
+                        <div class="table-filter ml-2">
+                            <span>Risk:</span>
+                            <select class="form-control bg-2-border text-white"" name="status">
+                                <option selected disabled value="">Select</option>
+                                <option>In Review</option>
+                                <option>Mitigate</option>
+                                <option>Transfer</option>
+                            </select>
+                        </div>
+                        <div class="table-filter ml-2">
+                            <input class="form-control bg-2-border text-white" type="text" name="id"placeholder="Filter by Risk Owner...">
+                        </div>
+                    </form>
+                </div>
+                <form method="post" action="action_updaterisk.php">
+                <table class="my-table mt-4">
                     <thead>
                     <tr>
-                        <th class="text-center" width="5%" scope="col">ID</th>
-                        <th width="20%" scope="col">Title</th>
-                        <th class="text-center" scope="col">Status</th>
-                        <th width="20%" scope="col">Task</th>
-                        <th class="text-center" scope="col">Impact</th>
-                        <th class="text-center" scope="col">Likelihood</th>
-                        <th class="text-center" scope="col">Risk</th>
-                        <th scope="col">Risk Owner</th>
+                        <th class="text-center" style="width: 5%;">ID</th>
+                        <th style="width: 20%;">Title</th>
+                        <th class="text-center" style="width: 10%;">Status</th>
+                        <th style="width: 25%;">Task</th>
+                        <th class="text-center" style="width: 10%;">Impact</th>
+                        <th class="text-center" style="width: 10%;">Likelihood</th>
+                        <th class="text-center" style="width: 10%;">Risk</th>
+                        <th style="width: 10%;">Assigned To</th>
+                        <th>+/-</th>
                     </tr>
                 </thead>
-                    <?php
-                        $select = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username') ORDER BY id DESC";
-                        $result = mysqli_query($conn, $select);
-                        while ($row = mysqli_fetch_array($result)) {
-                    ?>
-        
+                        <?php
+                    $select = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username') ORDER BY id DESC";
+                    $result = mysqli_query($conn, $select);
+                    $select2 = "SELECT * FROM company_assets WHERE teamId = '$teamcode' AND NOT teamId = ''";
+                    $result2 = mysqli_query($conn, $select2);
+                    while ($row = mysqli_fetch_array($result)) {
+                ?>
                     <tr>
-                        <th class="opacity-50 text-center" scope="col"><?php echo $row['id']; ?></th>
+                        <th class="text-center"><?php echo $row['id']; ?></th>
                         <td><?php echo $row['title']; ?></td>
-                        <td><p class="text-center <?php if($row['status'] == 'In Review'){
+                        <td class="table-center"><p class="<?php if($row['status'] == 'In Review'){
                             echo 'text-center alert-orange';
                         }elseif($row['status'] == 'Mitigate'){
                             echo 'text-center alert-red';
@@ -198,7 +208,7 @@
                         <td><?php echo $row['task']; ?></td>
                         <td class="text-center"><?php echo $row['impact']; ?></td>
                         <td class="text-center"><?php echo $row['likelihood']; ?></td>
-                        <td><p class="text-center <?php if($row['risk'] == 'High'){
+                        <td class="table-center"><p class="text-center <?php if($row['risk'] == 'High'){
                             echo 'alert-red';
                         }elseif ($row['risk'] == 'Medium'){
                             echo 'alert-orange';
@@ -208,13 +218,50 @@
                             echo 'null';
                         }
                         ?>"><?php echo $row['risk']; ?></p></td>
-                        <td><?php echo $row['risk_owner']; ?></td>
+                        <td><?php echo $row['assignedTo']; ?></td>
+                        <td><input type="checkbox" name="management" id="management" data-toggle="toggle"></td>
                     </tr>
-        
+
+                    <tr class="collapse">
+                        <th colspan="1" class="text-center"></th>
+                        <td colspan="8">
+                            <p style="font-style: italic;">Mitigation Notes:</p>
+                            <div name="update_mitigation" contenteditable>
+                                <textarea class="form-control bg-2-border text-white" type="text" rows="3" name="update_mitigation" required="" value="<?php echo $row['mitigation']; ?>"><?php echo $row['mitigation']; ?></textarea>
+                            </div></br>
+                            <p><i>Risk Owner: </i><?php echo $row['risk_owner']; ?></p></br>
+                            <p style="font-style: italic;">Associated Business Areas:</p>
+                            <select class="form-control bg-2-border text-white" name="update_business">
+                                <option value="<?php echo $row['business']; ?>"><?php echo $row['business']; ?></option>
+                                <option value="Human Resources">Human Resources</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Accounting">Accounting</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Management">Management</option>
+                                <option value="Operations">Operations</option>
+                                <option value="">Unknown</option>
+                            </select></br>
+                            <p style="font-style: italic;">Associated Assets:</p>
+                            <select class="form-control bg-2-border text-white" name="update_asset">
+                                <option value="<?php echo $row['assets']; ?>"><?php echo $row['assets']; ?></option>
+                                <option value="">Unassigned</option>
+                                <?php
+                                while ($row = mysqli_fetch_array($result2)):; ?>
+                                <option value="<?php echo $row['name']; ?>"><?php echo $row['name']; ?></option>
+                                <?php
+                                endwhile;
+                                ?>
+                            </select></br>
+                            <div>
+                                <button class="btn btn-success" type="submit" name="submit">Update</button>
+                            </div>
+                            </form>
+                        </td>
+                    </tr>
                     <?php 
-                        }
-                    ?>
-        
+                }
+            ?>
                 </table>
             </div>
         </div>
@@ -222,6 +269,14 @@
 
     </div>
     <!-- /#wrapper -->
+
+    <script>
+        $(document).ready(function() {
+	$('[data-toggle="toggle"]').change(function(){
+		$(this).parents().next('.collapse').toggle();
+	});
+});
+    </script>
 
     <!-- Menu Toggle Script -->
     <script>

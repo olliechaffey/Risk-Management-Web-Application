@@ -103,95 +103,72 @@
         <div id="page-content-wrapper">
             <div class="container-fluid">
 
-                <h1 class="heading">Add New Risk</h1>
+                <h1 class="heading">Add New Asset</h1>
                 <span id="live-date" class="hovertext" data-hover="MM/DD/YYYY"></span>
                 <script src="scripts.js"></script>
                 <h6 class="sub-heading title-ul">Here’s an overview of the business right now.</h6>
 
-                <form class="insert-form mt-3" id="insert-form" method="post" action="action.php">
+                <form class="insert-form mt-3" id="insert-form" method="post" action="action_assets.php">
                         <div class="row">
                             <div class="col">
-                                <label>Title</label>
-                                <input type="text" class="form-control bg-2-border text-white" name="title"
-                                    placeholder="Enter title for risk..." required="">
+                                <label>Name</label>
+                                <input type="text" class="form-control bg-2-border text-white" name="name"
+                                    placeholder="Enter asset name..." required="">
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col">
-                                <label for="exampleFormControlTextarea1">Task Description</label>
-                                <textarea class="form-control bg-2-border text-white texta" name="task" rows="5"
-                                placeholder="Summerise the risk..." required=""></textarea>
+                                <label for="exampleFormControlSelect1">Category</label>
+                                <select class="form-control bg-2-border text-white" name="category" required="">
+                                    <option selected disabled value="">Select</option>
+                                    <option value="Hardware">Hardware</option>
+                                    <option value="Software">Software</option>
+                                    <option value="Networking">Networking</option>
+                                    <option value="Non-IT Asset">Non-IT Asset</option>
+                                </select>
                             </div>
                             <div class="col">
-                                <label for="exampleFormControlTextarea1">Mitigation Notes</label>
-                                <textarea class="form-control bg-2-border text-white texta" name="mitigation" rows="5"
-                                placeholder="Summerise the risk..."></textarea>
+                                <label for="exampleFormControlSelect1">Product Name</label>
+                                <input type="text" class="form-control bg-2-border text-white" name="prodName"
+                                    placeholder="Enter official product name..." required="">
                             </div>
-                        </div>
-                        <div class="row mt-3">
                             <div class="col">
                                 <label for="exampleFormControlSelect1">Status</label>
                                 <select class="form-control bg-2-border text-white" name="status" required="">
                                     <option selected disabled value="">Select</option>
-                                    <option>In Review</option>
-                                    <option>Mitigate</option>
-                                    <option>Transfer</option>
+                                    <option value="Live">Live</option>
+                                    <option value="Down">Down</option>
+                                    <option value="">n/a</option>
                                 </select>
                             </div>
                             <div class="col">
-                                <label for="exampleFormControlSelect1">Impact</label>
-                                <select class="form-control bg-2-border text-white" name="impact" required="">
+                                <label for="exampleFormControlSelect1">Location</label>
+                                <select class="form-control bg-2-border text-white" name="location">
                                     <option selected disabled value="">Select</option>
-                                    <option value="Very Low">Very Low</option>
-                                    <option value="Low">Low</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="High">High</option>
-                                    <option value="Very High">Very High</option>
-                                </select>
-                            </div>
-                            <div class="col">
-                                <label for="exampleFormControlSelect1">Likelihood</label>
-                                <select class="form-control bg-2-border text-white" name="likelihood" required="">
-                                    <option selected disabled value="">Select</option>
-                                    <option value="Very Unlikely">Very Unlikely</option>
-                                    <option value="Unlikely">Unlikely</option>
-                                    <option value="Possible">Possible</option>
-                                    <option value="Likely">Likely</option>
-                                    <option value="Very Likely">Very Likely</option>
+                                    <option value="Human Resources">Human Resources</option>
+                                    <option value="Information Technology">Information Technology</option>
+                                    <option value="Finance">Finance</option>
+                                    <option value="Accounting">Accounting</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Management">Management</option>
+                                    <option value="Operations">Operations</option>
+                                    <option value="">Unknown</option>
                                 </select>
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col">
-                                    <label for="exampleFormControlSelect1">Assets at risk</label>
-                                    <select class="form-control bg-2-border text-white" name="assets">
-                                        <option selected disabled value="">Select</option>
-                                        <?php
-                                        $select = "SELECT * FROM company_assets WHERE teamId = '$teamcode' AND NOT teamId = ''";
-                                        $result = mysqli_query($conn, $select);
-                                        while ($row = mysqli_fetch_array($result)):; ?>
-                                        <option value="<?php echo $row['name']; ?>"><?php echo $row['name']; ?></option>
-                                        <?php
-                endwhile;
-            ?>
-                                    </select>
+                                    <label for="exampleFormControlSelect1">Vendor</label>
+                                    <input type="text" class="form-control bg-2-border text-white" name="vendor"
+                                        placeholder="Enter vendor for asset...">
                             </div>
                             <div class="col">
-                                    <label for="exampleFormControlSelect1">Business Areas at risk</label>
-                                    <select class="form-control bg-2-border text-white" name="business">
-                                        <option selected disabled value="">Select</option>
-                                        <option value="Human Resources">Human Resources</option>
-                                        <option value="Information Technology">Information Technology</option>
-                                        <option value="Finance">Finance</option>
-                                        <option value="Accounting">Accounting</option>
-                                        <option value="Marketing">Marketing</option>
-                                        <option value="Management">Management</option>
-                                        <option value="Operations">Operations</option>
-                                        <option value="">Unknown</option>
-                                    </select>
+                                    <label for="exampleFormControlSelect1">Version</label>
+                                    <input type="number" step=".000000000001" class="form-control bg-2-border text-white" name="version"
+                                        placeholder="Enter version for asset...">
                             </div>
                             <div class="col">
-                                    <label for="exampleFormControlInput1">Assign Task</label>
+                                    <label for="exampleFormControlInput1">Assign Asset</label>
                                     <select class="form-control bg-2-border text-white" name="assignedTo">
                                         <option selected disabled value="">Select</option>
                                         <option value="">Unassigned</option>
@@ -205,11 +182,6 @@
             ?>
                                     </select>
                             </div>
-                            <div class="col">
-                                    <label for="exampleFormControlSelect1">Expiary Date</label>
-                                    <input type="date" class="form-control bg-2-border text-white" name="expDate"
-                                    placeholder="DD/MM/YYYY" required="">
-                                </div>
                         </div>
                     <div class="d-flex justify-content-center mt-3">
                         <input class="btn btn-success" type="submit" name="submit" value="Submit Data">

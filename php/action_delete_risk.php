@@ -1,9 +1,6 @@
 <?php
 
-session_start();
-
 $id = $_POST["id"];
-
 
 if (!empty($_POST)) {
     $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
@@ -13,10 +10,12 @@ if (!empty($_POST)) {
     
     //$hashed = password_hash($password, PASSWORD_DEFAULT);
     
-    $sql = "DELETE FROM company_assets WHERE id='$id'";
+    $sql = "DELETE FROM risk_assessment WHERE id = '$id'";
     $result = mysqli_query($conn, $sql);
-    echo "<script> location.href='assets.php'; </script>";
+    echo '<script>alert("Risk deleted successfully")</script>';
+    echo "<script> location.href='riskment.php'; </script>";
     exit;
 }
 
+$conn->close();
 ?>

@@ -4,10 +4,12 @@ session_start();
 
 $name = $_POST["name"];
 $category = $_POST["category"];
-$product_name = $_POST["product_name"];
+$product_name = $_POST["prodName"];
+$status = $_POST["status"];
+$location = $_POST["location"];
 $version = $_POST["version"];
 $vendor = $_POST["vendor"];
-
+$assignedTo = $_POST["assignedTo"];
 
 if (!empty($_POST)) {
     $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
@@ -17,8 +19,9 @@ if (!empty($_POST)) {
     
     //$hashed = password_hash($password, PASSWORD_DEFAULT);
     
-    $sql = "INSERT INTO company_assets (name, category, product_name, version, vendor) VALUES ('$name', '$category', '$product_name', '$version', '$vendor')";
+    $sql = "INSERT INTO company_assets (name, category, product_name, version, vendor, status, location, assignedTo) VALUES ('$name', '$category', '$product_name', '$version', '$vendor', '$status', '$location', '$assignedTo')";
     $result = mysqli_query($conn, $sql);
+    echo '<script>alert("Asset added successfully")</script>';
     echo "<script> location.href='assets.php'; </script>";
     exit;
 }

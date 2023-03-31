@@ -15,8 +15,12 @@
 ?>
 
 <?php
-    $query = "SELECT risk, count(*) as number FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' GROUP BY risk UNION SELECT risk, count(*) as number FROM risk_assessment WHERE risk_owner = '$username' GROUP BY risk";
-    $result = mysqli_query($conn, $query);
+$query = "SELECT risk, count(*) as number FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' OR risk_owner = '$username' GROUP BY risk";
+$result = mysqli_query($conn, $query);
+$queryRes = "SELECT business, count(*) as numberRes FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' OR risk_owner = '$username' GROUP BY business";
+$resultRes = mysqli_query($conn, $queryRes);
+$queryR = "SELECT CAST(riskDate AS DATE) as riskDate, COUNT(CASE WHEN risk = 'Low' THEN 1 END) as Low, COUNT(CASE WHEN risk = 'Medium' THEN 1 END) as Medium, COUNT(CASE WHEN risk = 'High' THEN 1 END) as High from risk_assessment GROUP BY riskDate";
+$res = mysqli_query($conn, $queryR);
 ?>
 
 <!doctype html>
@@ -48,6 +52,9 @@
     <script type="text/javascript">
         google.charts.load('current', { 'packages': ['corechart'] });
         google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(drawChartRes);
+        google.charts.load('current', {'packages':['bar']});
+        google.charts.setOnLoadCallback(drawChartBar);
 
         function drawChart() {
 
@@ -71,7 +78,7 @@
                 slices: [{ color: '#F99D9D' }, { color: '#7ABD6A' }, { color: '#DEAC61' }],
                 //is3D: true,
                 fontSize: ['12'],
-                chartArea: { left: 20, top: 50, bottom: 50, width: '100%', height: '100%' },
+                chartArea: { left: 20, top: 20, bottom: 20, width: '100%', height: '100%' },
                 legend: { textStyle: { color: 'white' } }
             };
 
@@ -79,18 +86,43 @@
 
             chart.draw(data, options);
         }
-    </script>
 
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['bar']});
-      google.charts.setOnLoadCallback(drawChart);
+        function drawChartRes() {
 
-      function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Business', 'Number'],
+
+          <?php
+
+            while ($row = mysqli_fetch_array($resultRes)) {
+                echo "['".$row["business"]."', ".$row["numberRes"]."],";
+            }
+
+          ?>
+
+        ]);
+
+            var options = {
+                //title: 'Risk Pie Chart',
+                pieHole: 0.3,
+                backgroundColor: 'transparent',
+                // slices: [{ color: '#F99D9D' }, { color: '#7ABD6A' }, { color: '#DEAC61' }],
+                //is3D: true,
+                fontSize: ['12'],
+                chartArea: { left: 20, top: 20, bottom: 20, width: '100%', height: '100%' },
+                legend: { textStyle: { color: 'white' } }
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechartRes'));
+
+            chart.draw(data, options);
+        }
+
+      function drawChartBar() {
         var data = google.visualization.arrayToDataTable([
           ['Date', 'Low', 'Medium', 'High'],
           <?php 
-          $query = "SELECT riskDate, COUNT(CASE WHEN risk = 'Low' THEN 1 END) as Low, COUNT(CASE WHEN risk = 'Medium' THEN 1 END) as Medium, COUNT(CASE WHEN risk = 'High' THEN 1 END) as High from risk_assessment GROUP BY riskDate";
-          $res = mysqli_query($conn, $query);
+          
           while($data = mysqli_fetch_array($res)){
             $date = $data['riskDate'];
             $low = $data['Low'];
@@ -104,18 +136,15 @@
         ]);
 
         var options = {
-          chart: {
-            title: 'Company Performance',
-            subtitle: 'Sales, Expenses, and Profit: 2014-2017',
-          },
           bars: 'vertical', // Required for Material Bar Charts.
-          height: 500,
-          backgroundColor: 'transparent',
-          colors: ['#7ABD6A', '#DEAC61', '#F99D9D']
+          height: 400,
+          backgroundColor: '#222834',
+          colors: ['#7ABD6A', '#DEAC61', '#F99D9D'],
+          legend: { textStyle: { color: 'white' } }
         };
 
         var chart = new google.charts.Bar(document.getElementById('chart_div'));
-        chart.draw(data, options);
+        chart.draw(data, google.charts.Bar.convertOptions(options));
       }
     </script>
 
@@ -304,21 +333,21 @@
         <div class="container-fluid content-row">
                     <div class="row mt-4">
                         <div class="col">
-                            <div class="card h-100 bg-2-border text-white">
+                            <div class="card bg-2-border text-white">
                                 <div class="card-header">
                                 <h3>Risk Wheel</h3>
                             </div>
-                            <div id="piechart" style="width: 100%; height: 400px;"></div>
-                        </div>
-                    </div>
-                        <div class="col">
-                            <div class="card h-100 bg-2-border text-white">
-                                <div class="card-header">
-                                <h3>Risk Matrix</h3>
+                            <div id="piechart" style="width: 100%; height: 200px;"></div>
                             </div>
-                            <div class="container d-flex justify-content-center" style="width: 100%; height: 300px;">
-                                <div class="grid justify-content-center mt-5">
-                                    <div class="row" style="width: 300px; height: 60px;">
+                    </div>
+                    <div class="col">
+                            <div class="card bg-2-border text-white">
+                                <div class="card-header">
+                                <h3>Heatmap</h3>
+                            </div>
+                            <div class="container d-flex justify-content-center" style="width: 100%; height: 200px;">
+                                <div class="grid justify-content-center mt-1">
+                                    <div class="row" style="width: 300px; height: 38px;">
                                         <div class="col d-flex justify-content-center align-items-center" id="1"
                                             style="background-color: #DBD06D;">
                                             <a href="#">
@@ -397,7 +426,7 @@
                                 ?>
                                         </div>
                                     </div>
-                                    <div class="row" style="width: 300px; height: 60px;">
+                                    <div class="row" style="width: 300px; height: 38px;">
                                         <div class="col d-flex justify-content-center align-items-center" id="1"
                                             style="background-color: #A9BC5F;">
                                             <?php
@@ -474,7 +503,7 @@
                                 ?>
                                         </div>
                                     </div>
-                                    <div class="row" style="width: 300px; height: 60px;">
+                                    <div class="row" style="width: 300px; height: 38px;">
                                         <div class="col d-flex justify-content-center align-items-center" id="1"
                                             style="background-color: #69CD59;">
                                             <?php
@@ -551,7 +580,7 @@
                                 ?>
                                         </div>
                                     </div>
-                                    <div class="row" style="width: 300px; height: 60px;">
+                                    <div class="row" style="width: 300px; height: 38px;">
                                         <div class="col d-flex justify-content-center align-items-center" id="1"
                                             style="background-color: #399B29;">
                                             <?php
@@ -628,7 +657,7 @@
                                 ?>
                                         </div>
                                     </div>
-                                    <div class="row" style="width: 300px; height: 60px;">
+                                    <div class="row" style="width: 300px; height: 38px;">
                                         <div class="col d-flex justify-content-center align-items-center" id="1"
                                             style="background-color: #05691B;">
                                             <?php
@@ -709,6 +738,14 @@
                             </div>
                         </div>
                         </div>
+                        <div class="col">
+                            <div class="card bg-2-border text-white">
+                                <div class="card-header">
+                                <h3>Business Areas At Risk</h3>
+                            </div>
+                            <div id="piechartRes" style="width: 100%; height: 200px;"></div>
+                            </div>
+                    </div>
                     </div>
                     <div class="row mt-4">
                         <div class="col">

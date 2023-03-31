@@ -82,6 +82,9 @@
                     <a href="newrisk.php"><i class="fa-solid fa-plus"></i> New Risk</a>
                 </li>
                 <li>
+                    <a href="newasset.php"><i class="fa-solid fa-plus"></i> New Asset</a>
+                </li>
+                <li>
                     <a href="riskment.php"><i class="fa-solid fa-bolt"></i> Risk Register</a>
                 </li>
                 <li>
@@ -126,7 +129,7 @@
                 <script src="scripts.js"></script>
                 <h6 class="sub-heading title-ul">List of company assets - which may be vulnerable to any threats notified in the risk assessment.</h6>
 
-                <form class="insert-form mt-3" id="insert-form" method="post" action="action_assets.php">
+                <!-- <form class="insert-form mt-3" id="insert-form" method="post" action="action_assets.php">
                     <div class="input-field">
         
                         <table class="w-100 text-center" id="table_field">
@@ -152,15 +155,32 @@
                         </div>
         
                     </div>
-                </form>
-                <table class="table rounded table-striped table-dark table-responsive-md mt-5 table-hover">
+                </form> -->
+
+                <div class="top-button mt-4">
+                    <form class="form-inline mt-3" id="insert-form" method="post" action="action_delete_asset.php">
+                        <div class="mr-2">
+                        <a href="newasset.php"><input class="btn btn-success btn-block" type="button" value="Add"></a>
+                        </div>
+                        <div class="mr-2">
+                        <input class="form-control bg-2-border text-white" type="text" name="id" required="" placeholder="Enter Asset ID...">
+                        </div>
+                        <button class="btn btn-danger" type="submit" name="submit">Delete</button>
+                    </form>
+                </div>
+
+                <table class="my-table mt-4">
                     <thead>
                     <tr>
-                        <th width="25%" scope="col">Name</th>
-                        <th width="25%" scope="col">Category</th>
-                        <th width="25%" scope="col">Product Name</th>
-                        <th scope="col">Version</th>
-                        <th scope="col">Vendor</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Category</th>
+                        <th>Primary Location</th>
+                        <th>Product Name</th>
+                        <th>Version</th>
+                        <th>Vendor</th>
+                        <th>Assigned To</th>
                     </tr>
                 </thead>
                     <?php
@@ -172,11 +192,26 @@
                     ?>
         
                     <tr>
+                        <td><?php echo $row['id']; ?></td>
                         <td><?php echo $row['name']; ?></td>
-                        <td><?php echo $row['category']; ?></td>
+                        <td><?php echo $row['status']; ?></td>
+                        <td><p class="<?php if($row['category'] == 'Hardware'){
+                            echo 'text-center alert-green';
+                        }elseif($row['category'] == 'Software'){
+                            echo 'text-center alert-orange';
+                        }elseif($row['category'] == 'Networking'){
+                            echo 'text-center alert-blue';
+                        }elseif($row['category'] == 'Non-IT Asset'){
+                            echo 'text-center alert-red';
+                        }else{
+                            echo 'text-center status-s';
+                        }
+                        ?>"><?php echo $row['category']; ?></p></td>
+                        <td><?php echo $row['location']; ?></td>
                         <td><?php echo $row['product_name']; ?></td>
                         <td><?php echo $row['version']; ?></td>
                         <td><?php echo $row['vendor']; ?></td>
+                        <td><?php echo $row['assignedTo']; ?></td>
                     </tr>
         
                     <?php 

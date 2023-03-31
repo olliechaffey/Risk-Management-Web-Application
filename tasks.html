@@ -39,66 +39,6 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
-    <script>
-        $(document).ready(function(){
-            $('[data-toggle="tooltip"]').tooltip();
-            var actions = $("table td:last-child").html();
-            // Append table with add row form on add new button click
-            $(".add-new").click(function(){
-                $(this).attr("disabled", "disabled");
-                var index = $("table tbody tr:last-child").index();
-                var row = '<tr>' +
-                    '<td><input type="text" class="form-control" name="id" id="id"></td>' +
-                    '<td><input type="text" class="form-control" name="title" id="title"></td>' +
-                    '<td><select class="form-control" name="status" id="status"><option value="impact-review">In Review</option><option value="impact-compelte">Complete</option></td>' +
-                    '<td><input type="text" class="form-control" name="task" id="task"></td>' +
-                    '<td><select class="form-control" name="impact" id="impact"><option value="impact-verylow">Very Low</option><option value="impact-low">Low</option><option value="impact-medium">Medium</option><option value="impact-high">High</option><option value="impact-veryhigh">Very High</option></select></td>' +
-                    '<td><select class="form-control" name="likelihood" id="likelihood"><option value="likelihood-verylow">Very Low</option><option value="likelihood-low">Low</option><option value="likelihood-medium">Medium</option><option value="likelihood-high">High</option><option value="likelihood-veryhigh">Very High</option></select></td>' +
-                    '<td><select class="form-control" name="risklevel" id="risklevel"><option value="risklevel-verylow">Very Low</option><option value="risklevel-low">Low</option><option value="risklevel-medium">Medium</option><option value="risklevel-high">High</option><option value="risklevel-veryhigh">Very High</option></select></td>' +
-                    '<td><input type="text" class="form-control" name="riskowner" id="riskowner"></td>' +
-                    '<td>' + actions + '</td>' +
-                '</tr>';
-                $("table").append(row);		
-                $("table tbody tr").eq(index + 1).find(".add, .edit").toggle();
-                $('[data-toggle="tooltip"]').tooltip();
-            });
-            // Add row on add button click
-            $(document).on("click", ".add", function(){
-                var empty = false;
-                var input = $(this).parents("tr").find('input[type="text"]');
-                input.each(function(){
-                    if(!$(this).val()){
-                        $(this).addClass("error");
-                        empty = true;
-                    } else{
-                        $(this).removeClass("error");
-                    }
-                });
-                $(this).parents("tr").find(".error").first().focus();
-                if(!empty){
-                    input.each(function(){
-                        $(this).parent("td").html($(this).val());
-                    });			
-                    $(this).parents("tr").find(".add, .edit").toggle();
-                    $(".add-new").removeAttr("disabled");
-                }		
-            });
-            // Edit row on edit button click
-            $(document).on("click", ".edit", function(){		
-                $(this).parents("tr").find("td:not(:last-child)").each(function(){
-                    $(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
-                });		
-                $(this).parents("tr").find(".add, .edit").toggle();
-                $(".add-new").attr("disabled", "disabled");
-            });
-            // Delete row on delete button click
-            $(document).on("click", ".delete", function(){
-                $(this).parents("tr").remove();
-                $(".add-new").removeAttr("disabled");
-            });
-        });
-        </script>
-
 </head>
 
 <body class="bg-1">
@@ -172,11 +112,11 @@
                 <div class="row">
                     <div class="col-xl col-md-6">
                         <div class="card bg-2-border text-white mb-4 mt-2">
-                            <div class="card-body">Avoid
+                            <div class="card-body" style="border-width: 1rem; border-bottom: solid #f0ad4e; border-bottom-left-radius: 2%; border-bottom-right-radius: 2%;"><p>In Review</p>
                                 <?php
                                         $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                                     
-                                        $dash_riskcount_query = "SELECT * from risk_assessment where status='avoid'";
+                                        $dash_riskcount_query = "SELECT * from risk_assessment where status='In Review'";
                                         $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
         
                                         if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
@@ -185,20 +125,16 @@
                                             echo '<h2 class="mb-0"> No Data </h2>';
                                         }
                                     ?>
-                            </div>
-                            <div class="card-footer d-flex align-items-ceneter justify-content-between">
-                                <a class="small text-white stretched-link" href="low-risk.php">View Details</a>
-                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                             </div>
                         </div>
                     </div>
                     <div class="col-xl col-md-6">
                         <div class="card bg-2-border text-white mb-4 mt-2">
-                            <div class="card-body">Mitigate
+                            <div class="card-body" style="border-width: 1rem; border-bottom: solid #d9534f; border-bottom-left-radius: 2%; border-bottom-right-radius: 2%;"><p>Mitigate</p>
                                 <?php
                                         $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                                     
-                                        $dash_riskcount_query = "SELECT * from risk_assessment where status='mitigate'";
+                                        $dash_riskcount_query = "SELECT * from risk_assessment where status='Mitigate'";
                                         $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
         
                                         if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
@@ -207,20 +143,16 @@
                                             echo '<h2 class="mb-0"> No Data </h2>';
                                         }
                                     ?>
-                            </div>
-                            <div class="card-footer d-flex align-items-ceneter justify-content-between">
-                                <a class="small text-white stretched-link" href="medium-risk.php">View Details</a>
-                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                             </div>
                         </div>
                     </div>
                     <div class="col-xl col-md-6">
                         <div class="card bg-2-border text-white mb-4 mt-2">
-                            <div class="card-body">Transfer
+                            <div class="card-body" style="border-width: 1rem; border-bottom: solid #0275d8; border-bottom-left-radius: 2%; border-bottom-right-radius: 2%;"><p>Transfer</p>
                                 <?php
                                         $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                                     
-                                        $dash_riskcount_query = "SELECT * from risk_assessment where status='transfer'";
+                                        $dash_riskcount_query = "SELECT * from risk_assessment where status='Transfer'";
                                         $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
         
                                         if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
@@ -229,20 +161,16 @@
                                             echo '<h2 class="mb-0"> No Data </h2>';
                                         }
                                     ?>
-                            </div>
-                            <div class="card-footer d-flex align-items-ceneter justify-content-between">
-                                <a class="small text-white stretched-link" href="high-risk.php">View Details</a>
-                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                             </div>
                         </div>
                     </div>
                     <div class="col-xl col-md-6">
                         <div class="card bg-2-border text-white mb-4 mt-2">
-                            <div class="card-body">Accept
+                            <div class="card-body" style="border-width: 1rem; border-bottom: solid #5cb85c; border-bottom-left-radius: 2%; border-bottom-right-radius: 2%;"><p>Done</p>
                                 <?php
                                         $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                                     
-                                        $dash_riskcount_query = "SELECT * from risk_assessment where status='accept'";
+                                        $dash_riskcount_query = "SELECT * from risk_assessment where status='Done'";
                                         $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
         
                                         if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
@@ -251,57 +179,47 @@
                                             echo '<h2 class="mb-0"> No Data </h2>';
                                         }
                                     ?>
-                            </div>
-                            <div class="card-footer d-flex align-items-ceneter justify-content-between">
-                                <a class="small text-white stretched-link" href="riskment.php">View Details</a>
-                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <form class="insert-form mt-3" id="insert-form" method="post" action="action_treat.php">
-                    <div class="input-field">
-        
-                        <table class="w-25 text-center" id="table_field">
-                            <tr>
-                                <th>ID</th>
-                                <th>Status</th>
-                            </tr>
-        
-                            <tr>
-                                <td width="25%" class="pr-2"><input class="form-control bg-2-border text-white" type="text" name="id" required=""></td>
-                                <td class="p-2"><select class="form-control bg-2-border text-white" type="text" name="status" required=""><option selected disabled value="">Select</option><option value="In Review">In Review</option><option value="Mitigate">Mitigate</option><option value="Transfer">Transfer</option><option value="Done">Done</option></select></td>
-                                <td class="pl-2">
-                                    <input class="btn btn-success btn-block" type="submit" name="submit" value="Update">
-                                </td>
-                            </tr>
-                            
-                        </table>
-        
-                    </div>
-                </form>
+                <div class="top-button mt-4">
+                    <p>Update Risk Status:</p>
+                    <form class="form-inline mt-3" id="insert-form" method="post" action="action_treat.php">
+                        <div class="mr-2">
+                            <input class="form-control bg-2-border text-white" type="text" name="id" required="" placeholder="Enter Risk ID...">
+                            <select class="form-control bg-2-border text-white" type="text" name="status" required=""><option selected disabled value="">Select</option><option value="In Review">In Review</option><option value="Mitigate">Mitigate</option><option value="Transfer">Transfer</option><option value="Done">Done</option></select>
+                        </div>
+                        <button class="btn btn-success" type="submit" name="submit">Update</button>
+                    </form>
+                </div>
 
-                <table class="table table-dark table-responsive-md mt-5">
+                <table class="my-table mt-5">
+                <thead>
                     <tr>
-                        <th class="pl-5" width="10%" scope="col">ID</th>
-                        <th width="40%" scope="col">Task/Treatment</th>
-                        <th class="text-center" width="20%" scope="col">Status</th>
-                        <th width="20%" scope="col">Risk Level</th>
-                        <th width="20%" scope="col">Days Left</th>
+                        <th class="text-center" width="5%">ID</th>
+                        <th>Task/Treatment</th>
+                        <th style="width: 700px;">Mitigation Notes</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Risk Level</th>
+                        <th class="text-center">Days Left</th>
+                        <th>Delete</th>
                     </tr>
+                </thead>
                     <?php
                         $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
-                    
-                        $select = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username') ORDER BY CASE WHEN risk = 'High' THEN 1 WHEN risk = 'Medium' THEN 2 WHEN risk = 'Low' THEN 3 ELSE 4 END ASC";
+
+                        $select = "(SELECT *, abs(DATEDIFF(NOW(), expDate)) as expDate FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '') UNION (SELECT *, abs(DATEDIFF(NOW(), expDate)) as expDate FROM risk_assessment WHERE risk_owner = '$username') ORDER BY CASE WHEN risk = 'High' THEN 1 WHEN risk = 'Medium' THEN 2 WHEN risk = 'Low' THEN 3 ELSE 4 END ASC";
                         $result = mysqli_query($conn, $select);
                         while ($row = mysqli_fetch_array($result)) {
                     ?>
-        
+                    <tbody>
                     <tr>
-                        <td><?php echo $row['id']; ?></td>
+                        <td class="text-center"><?php echo $row['id']; ?></td>
                         <td><?php echo $row['task']; ?></td>
-                        <td class="d-flex justify-content-center">
+                        <td style="width: 400px; word-wrap: break-word;"><?php echo $row['mitigation']; ?></td>
+                        <td class="table-center">
                             <p class="<?php if($row['status'] == 'In Review'){
                             echo 'text-center alert-orange';
                         }elseif($row['status'] == 'Mitigate'){
@@ -314,18 +232,33 @@
                             echo 'text-center status-s';
                         }
                         ?>"><?php echo $row['status']; ?></p></td>
-                        <td><p class="text-center <?php if($row['risk'] == 'High'){
-                            echo 'alert-red';
+                        <td><p class="<?php if($row['risk'] == 'High'){
+                            echo 'text-center alert-red';
                         }elseif ($row['risk'] == 'Medium'){
-                            echo 'alert-orange';
+                            echo 'text-center alert-orange';
                         }elseif ($row['risk'] == 'Low'){
-                            echo 'alert-green';
+                            echo 'text-center alert-green';
                         }else{
-                            echo 'null';
+                            echo 'text-center status-s';
                         }
                         ?>"><?php echo $row['risk']; ?></p></td>
-                        <td><?php echo $row['id']; ?></td>
+                        <td class="text-center" style="color:<?php if($row['expDate'] <= 7){
+                            echo 'red;';
+                        }?>"><?php echo $row['expDate'];?> <?php if($row['expDate'] ){
+                            echo 'Days';  
+                        }elseif($row['expDate'] <= 0){
+                            echo 'Expired';
+                        }else{
+                            echo null;
+                        }
+                        ?></td>
+                        <td>
+                            <a class="btn btn-danger my-3" href="action_delete_task.php?id=<?php echo $row['id']; ?>">
+                              Delete
+                            </a>
+                          </td>
                     </tr>
+                </tbody>
         
                     <?php 
                         }
