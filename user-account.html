@@ -13,6 +13,8 @@
     $_SESSION['username'] = $username;
     $teamcode = $_SESSION['teamid'];
     $_SESSION['teamcode'] = $teamcode;
+    $id = $_SESSION['userid'];
+    $_SESSION['id'] = $id;
 ?> 
 
 <!doctype html>
@@ -107,94 +109,81 @@
 
                 <h1 class="heading">My Account</h1>
                 <span id="live-date" class="hovertext" data-hover="MM/DD/YYYY"></span>
+                <div class="sub-heading title-ul">
                 <script src="scripts.js"></script>
-                <h6 class="sub-heading title-ul">Subheading goes here.</h6>
+                <ol class="breadcrumb bg-transparent w-50 m-0 p-0">
+                  <li class="breadcrumb-item"><a href="#"><i class="fa-sharp fa-solid fa-house"></i></a></li>
+                  <li class="breadcrumb-item active" aria-current="page">My Account</li>
+                </ol>
+              </div>
 
-                <div class="row">
-                    <div class="col">
-                      <nav aria-label="breadcrumb" class="rounded-3 pt-3 mb-4">
-                        <ol class="bg-2 breadcrumb mb-0">
-                          <li class="breadcrumb-item"><a href="#">Settings</a></li>
-                          <li class="breadcrumb-item active" aria-current="page">My Account</li>
-                        </ol>
-                      </nav>
-                    </div>
+                  <div class="mb-2 mt-4">
+                    <a href="edit-account.php"><button type="button" class="btn btn-outline-primary">Edit Profile</button></a>
                   </div>
 
-                <div class="py-5">
+                <div class="py-3">
+
+                  <?php
+                        $select = "SELECT * FROM users WHERE usersId = '$id'";
+                        $result = mysqli_query($conn, $select);
+                        while ($row = mysqli_fetch_array($result)) {
+                      ?>
                 
                     <div class="row">
                       <div class="col-lg-4">
-                        <div class="card mb-4 bg-2-border">
-                          <div class="card-body text-center">
-                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                        <div class="card flex-row flex-wrap align-items-center mb-4 bg-2-border">
+                          <div class="card-header border-0">
+                            <img src="img/default_avatar.png" alt="avatar"
                               class="rounded-circle img-fluid" style="width: 150px;">
-                            <h5 class="my-3">John Smith</h5>
-                            <p class="text-muted mb-1">Full Stack Developer</p>
-                            <p class="text-muted mb-4">Bay Area, San Francisco, CA</p>
-                            <div class="d-flex justify-content-center mb-2">
-                              <button type="button" class="btn btn-primary">Follow</button>
-                              <button type="button" class="btn btn-outline-primary ms-1">Message</button>
-                            </div>
+                          </div>
+                          <div class="card-block ml-3">
+                            <h5 class="my-3"><?php echo $row['usersName']; ?></h5>
+                            <p class="text-muted mb-1"><?php echo $row['jobRole']; ?></p>
+                            <p class="text-muted mb-4">
+                              <?php if($row['city'] OR $row['country'] == true){
+                                echo $row['city'], ', ', $row['country'] ;
+                            }else{
+                              echo 'No location set.';
+                            } 
+                            ?></p>
                           </div>
                         </div>
+                        <?php 
+                        }
+                        ?>
                         <div class="card mb-4 bg-2-border">
-                            <div class="card-body">
-                              <div class="row">
-                                <div class="col">
-                                    <h3 class="title-ul">Team Memebers</h3>
-                                </div>
-                              </div> 
-                              <div class="row pt-2">
-                                <div class="col-sm-3">
-                                  <p class="mb-0">Full Name</p>
-                                </div>
-                                <div class="col-sm-9">
-                                  <p class="text-muted mb-0">Johnatan Smith</p>
-                                </div>
-                              </div>
-                              <hr>
-                              <div class="row">
-                                <div class="col-sm-3">
-                                  <p class="mb-0">Email</p>
-                                </div>
-                                <div class="col-sm-9">
-                                  <p class="text-muted mb-0">example@example.com</p>
-                                </div>
-                              </div>
-                              <hr>
-                              <div class="row">
-                                <div class="col-sm-3">
-                                  <p class="mb-0">Phone</p>
-                                </div>
-                                <div class="col-sm-9">
-                                  <p class="text-muted mb-0">(097) 234-5678</p>
-                                </div>
-                              </div>
-                              <hr>
-                              <div class="row">
-                                <div class="col-sm-3">
-                                  <p class="mb-0">Mobile</p>
-                                </div>
-                                <div class="col-sm-9">
-                                  <p class="text-muted mb-0">(098) 765-4321</p>
-                                </div>
-                              </div>
-                              <hr>
-                              <div class="row">
-                                <div class="col-sm-3">
-                                  <p class="mb-0">Address</p>
-                                </div>
-                                <div class="col-sm-9">
-                                  <p class="text-muted mb-0">Bay Area, San Francisco, CA</p>
-                                </div>
-                              </div>
+                          <div class="card-body">
+                            <h4 class="card-title title-ul">Team Members</h4>
+                            <div class="table-responsive">
+                              <table class="table rounded table-striped table-dark table-responsive-md">
+                                <thead>
+                                  <tr>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                    <th>Job Role</th>
+                                    <th>Member Since</th>
+                                  </tr>
+                                </thead>
+                                <?php
+                                  $select = "SELECT *, CAST(memberSince AS DATE) as riskDate FROM users WHERE teamId = '$teamcode' AND NOT teamId = '' ORDER BY riskDate DESC";
+                                  $result = mysqli_query($conn, $select);
+                                  while ($row = mysqli_fetch_array($result)) {
+                                ?>
+                                <tr>
+                                  <td><?php echo $row['usersName']; ?></td>
+                                  <td><?php echo $row['usersUid']; ?></td>
+                                  <td><?php echo $row['jobRole']; ?></td>
+                                  <td><?php echo $row['riskDate']; ?></td>
+                                </tr>
+                                <?php } ?>
+                              </table>
                             </div>
                           </div>
-                      </div>
+                          </div>
+                        </div>
 
-                      <?php
-                        $select = "SELECT * FROM users WHERE usersUid = '$username'";
+                        <?php
+                        $select = "SELECT * FROM users WHERE usersId = '$id'";
                         $result = mysqli_query($conn, $select);
                         while ($row = mysqli_fetch_array($result)) {
                       ?>
@@ -239,7 +228,7 @@
                                 <p class="mb-0">Mobile</p>
                               </div>
                               <div class="col-sm-9">
-                                <p class="text-muted mb-0">Null</p>
+                                <p class="text-muted mb-0"><?php echo $row['phoneNumber']; ?></p>
                               </div>
                             </div>
                             <hr>
@@ -248,16 +237,13 @@
                                 <p class="mb-0">Address</p>
                               </div>
                               <div class="col-sm-9">
-                                <p class="text-muted mb-0">Null</p>
+                                <p class="text-muted mb-0"><?php echo $row['city'], ', ', $row['country'] ; ?></p>
                               </div>
                             </div>
                           </div>
                         </div>
 
-                        <?php 
-                        }
-                        ?>
-
+                        <?php } ?>
                         <div class="row">
                           <div class="col-md-6">
                             <div class="card mb-4 mb-md-0 bg-2-border">
@@ -327,8 +313,8 @@
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
+                        </div>
+                      </div>
 
             </div>
         </div>
