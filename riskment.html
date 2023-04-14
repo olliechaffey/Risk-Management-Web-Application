@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    
     <script src="https://kit.fontawesome.com/8c8e392149.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
@@ -63,14 +63,14 @@
     </script>
 </head>
 
-<body class="bg-1"">
+<body class="bg-1" style="font-family: Lato, Arial;">
 
     <div id="wrapper" class="toggled" style="overflow: auto; height: 100%;">
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper" class="bg-2">
             <ul class="sidebar-nav">
-                <li class="sidebar-brand">
+                <li class="sidebar-brand ml-2">
                     <a href="#">
                         RM Tool v.1.0
                     </a>
@@ -87,6 +87,9 @@
                     <a href="newrisk.php"><i class="fa-solid fa-plus"></i> New Risk</a>
                 </li>
                 <li>
+                    <a href="newasset.php"><i class="fa-solid fa-plus"></i> New Asset</a>
+                </li>
+                <li>
                     <a class="active" href="riskment.php"><i class="fa-solid fa-bolt"></i> Risk Register</a>
                 </li>
                 <li>
@@ -97,9 +100,6 @@
                 </li>
                 <li>
                     <a href="trends.php"><i class="fa-solid fa-arrow-trend-up"></i> Trends</a>
-                </li>
-                <li>
-                    <a href="audit.php"><i class="fa-solid fa-file"></i> Audit</a>
                 </li>
                 <label class="nav-label">categories</label>
                 <li>
@@ -113,9 +113,6 @@
                 </li>
                 <label class="nav-label">other</label>
                 <li>
-                    <a href="settings.php"><i class="fa-solid fa-wrench"></i> Settings</a>
-                </li>
-                <li>
                     <a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                 </li>
             </ul>
@@ -126,10 +123,15 @@
         <div id="page-content-wrapper">
             <div class="container-fluid">
 
-                <h1 class="heading">Risk Assessment</h1>
+                <h1 class="heading">Risk Register</h1>
                 <span id="live-date" class="hovertext" data-hover="MM/DD/YYYY"></span>
-                <script src="scripts.js"></script>
-                <h6 class="sub-heading title-ul">Hello, <?php echo $_SESSION['useruid']; ?></h6>
+                <div class="sub-heading title-ul">
+                    <script src="scripts.js"></script>
+                    <ol class="breadcrumb bg-transparent w-50 m-0 p-0">
+                        <li class="breadcrumb-item"><a href="index.php"><i class="fa-sharp fa-solid fa-house"></i></a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Risk Register</li>
+                    </ol>
+                </div>
 
                 <div class="top-button mt-4">
                     <form class="form-inline mt-3" id="insert-form" method="post" action="action_delete_risk.php">
@@ -145,31 +147,12 @@
                         </div>
                         <button class="btn btn-danger" type="submit" name="submit">Delete</button>
                         <div class="table-filter ml-2">
-                            <span>Status:</span>
-                            <select class="form-control bg-2-border text-white"" id="myList" onchange="myFunction()">
-                                <option selected disabled value="">Select</option>
-                                <option>In Review</option>
-                                <option>Mitigate</option>
-                                <option>Transfer</option>
-                                <option>Done</option>
-                            </select>
-                        </div>
-                        <div class="table-filter ml-2">
-                            <span>Risk:</span>
-                            <select class="form-control bg-2-border text-white"" name="status">
-                                <option selected disabled value="">Select</option>
-                                <option>In Review</option>
-                                <option>Mitigate</option>
-                                <option>Transfer</option>
-                            </select>
-                        </div>
-                        <div class="table-filter ml-2">
-                            <input class="form-control bg-2-border text-white" type="text" name="id"placeholder="Filter by Risk Owner...">
+                            <input class="form-control bg-2-border text-white" type="text" id="myInput" onkeyup="myFunction()" placeholder="Filter by Title...">
                         </div>
                     </form>
                 </div>
                 <form method="post" action="action_updaterisk.php">
-                <table class="my-table mt-4">
+                <table id="myTable" class="my-table mt-4">
                     <thead>
                     <tr>
                         <th class="text-center" style="width: 5%;">ID</th>
@@ -184,12 +167,13 @@
                     </tr>
                 </thead>
                         <?php
-                    $select = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username') ORDER BY id DESC";
+                    $select = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username')";
                     $result = mysqli_query($conn, $select);
                     $select2 = "SELECT * FROM company_assets WHERE teamId = '$teamcode' AND NOT teamId = ''";
                     $result2 = mysqli_query($conn, $select2);
                     while ($row = mysqli_fetch_array($result)) {
                 ?>
+                <tbody>
                     <tr>
                         <th class="text-center"><?php echo $row['id']; ?></th>
                         <td><?php echo $row['title']; ?></td>
@@ -218,12 +202,11 @@
                             echo 'null';
                         }
                         ?>"><?php echo $row['risk']; ?></p></td>
-                        <td><?php echo $row['assignedTo']; ?></td>
-                        <td><input type="checkbox" name="management" id="management" data-toggle="toggle"></td>
+                        <td><?php echo decryptthis($row['assignedTo'], $key); ?></td>
+                        <td><input type="checkbox" id="management" data-toggle="toggle"></td>
                     </tr>
-
                     <tr class="collapse">
-                        <th colspan="1" class="text-center"></th>
+                        <td colspan="1" class="text-center" name="id"><?php echo $row['id']; ?></td>
                         <td colspan="8">
                             <p style="font-style: italic;">Mitigation Notes:</p>
                             <div name="update_mitigation" contenteditable>
@@ -254,21 +237,43 @@
                                 ?>
                             </select></br>
                             <div>
-                                <button class="btn btn-success" type="submit" name="submit">Update</button>
+                                <button class="btn btn-success" type="submit" name="id" value="<?php echo $row['id']; ?>">Update</button>
                             </div>
-                            </form>
                         </td>
                     </tr>
+                </tbody>
                     <?php 
                 }
             ?>
                 </table>
+            </form>
             </div>
         </div>
         <!-- /#page-content-wrapper -->
 
     </div>
     <!-- /#wrapper -->
+
+    <script>
+        function myFunction() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
 
     <script>
         $(document).ready(function() {

@@ -71,13 +71,33 @@ function createUser($conn, $name, $email, $username, $team, $pwd){
         exit(); 
     }
 
-    $hashed = password_hash($pwd, PASSWORD_DEFAULT);
+    $key = 'qwe67^%&$as6^%4hf5&%7%Hf';
 
-    $stmt -> bind_param("sssss", $name, $email, $username, $team, $hashed);
+    function encryptthis($data, $key) {
+        $encryption_key = base64_decode($key);
+        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+        return base64_encode($encrypted . '::' . $iv);
+    }
+
+    $hashed = password_hash($pwd, PASSWORD_DEFAULT);
+    $encrypted_name = encryptthis($name, $key);
+    $encrypted_email = encryptthis($email, $key);
+
+    $stmt -> bind_param("sssss", $encrypted_name, $encrypted_email, $username, $team, $hashed);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
     header("location: ../signup.php?error=none");
         exit();
+}
+
+$key = 'qwe67^%&$as6^%4hf5&%7%Hf';
+
+function decryptthis($data, $key)
+{
+    $encryption_key = base64_decode($key);
+    list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2), 2, null);
+    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
 }
 
 function emptyInputLogin($username, $pwd){

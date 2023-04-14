@@ -19,7 +19,7 @@ if (!empty($_POST)) {
     
     //$hashed = password_hash($password, PASSWORD_DEFAULT);
     
-    $sql = "INSERT INTO company_assets (name, category, product_name, version, vendor, status, location, assignedTo) VALUES ('$name', '$category', '$product_name', '$version', '$vendor', '$status', '$location', '$assignedTo')";
+    $sql = "INSERT INTO company_assets (name, category, product_name, version, vendor, status, location, assignedTo, teamId) VALUES ('$name', '$category', '$product_name', '$version', '$vendor', '$status', '$location', '$assignedTo', '$_SESSION[teamcode]')";
     $result = mysqli_query($conn, $sql);
     echo '<script>alert("Asset added successfully")</script>';
     echo "<script> location.href='assets.php'; </script>";

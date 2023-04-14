@@ -41,14 +41,14 @@
 
 </head>
 
-<body class="bg-1">
+<body class="bg-1" style="font-family: Lato, Arial;">
 
     <div id="wrapper" class="toggled">
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper" class="bg-2">
             <ul class="sidebar-nav">
-                <li class="sidebar-brand">
+                <li class="sidebar-brand ml-2">
                     <a href="#">
                         RM Tool v.1.0
                     </a>
@@ -65,6 +65,9 @@
                     <a href="newrisk.php"><i class="fa-solid fa-plus"></i> New Risk</a>
                 </li>
                 <li>
+                    <a href="newasset.php"><i class="fa-solid fa-plus"></i> New Asset</a>
+                </li>
+                <li>
                     <a href="riskment.php"><i class="fa-solid fa-bolt"></i> Risk Register</a>
                 </li>
                 <li>
@@ -75,9 +78,6 @@
                 </li>
                 <li>
                     <a href="trends.php"><i class="fa-solid fa-arrow-trend-up"></i> Trends</a>
-                </li>
-                <li>
-                    <a href="audit.php"><i class="fa-solid fa-file"></i> Audit</a>
                 </li>
                 <label class="nav-label">categories</label>
                 <li>
@@ -91,9 +91,6 @@
                 </li>
                 <label class="nav-label">other</label>
                 <li>
-                    <a href="settings.php"><i class="fa-solid fa-wrench"></i> Settings</a>
-                </li>
-                <li>
                     <a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                 </li>
             </ul>
@@ -106,8 +103,13 @@
         
                 <h1 class="heading">Risk Treatment</h1>
                 <span id="live-date" class="hovertext" data-hover="MM/DD/YYYY"></span>
-                <script src="scripts.js"></script>
-                <h6 class="sub-heading title-ul">Status and due date for risk treatments.</h6>
+                <div class="sub-heading title-ul">
+                    <script src="scripts.js"></script>
+                    <ol class="breadcrumb bg-transparent w-50 m-0 p-0">
+                        <li class="breadcrumb-item"><a href="index.php"><i class="fa-sharp fa-solid fa-house"></i></a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Risk Treatment</li>
+                    </ol>
+                </div>
         
                 <div class="row">
                     <div class="col-xl col-md-6">
@@ -210,7 +212,7 @@
                     <?php
                         $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
 
-                        $select = "(SELECT *, abs(DATEDIFF(NOW(), expDate)) as expDate FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '') UNION (SELECT *, abs(DATEDIFF(NOW(), expDate)) as expDate FROM risk_assessment WHERE risk_owner = '$username') ORDER BY CASE WHEN risk = 'High' THEN 1 WHEN risk = 'Medium' THEN 2 WHEN risk = 'Low' THEN 3 ELSE 4 END ASC";
+                        $select = "(SELECT *, abs(DATEDIFF(NOW(), expDate)) as dayLeft FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '') UNION (SELECT *, abs(DATEDIFF(NOW(), expDate)) as expDate FROM risk_assessment WHERE risk_owner = '$username') ORDER BY CASE WHEN risk = 'High' THEN 1 WHEN risk = 'Medium' THEN 2 WHEN risk = 'Low' THEN 3 ELSE 4 END ASC";
                         $result = mysqli_query($conn, $select);
                         while ($row = mysqli_fetch_array($result)) {
                     ?>
@@ -242,15 +244,19 @@
                             echo 'text-center status-s';
                         }
                         ?>"><?php echo $row['risk']; ?></p></td>
-                        <td class="text-center" style="color:<?php if($row['expDate'] <= 7){
-                            echo 'red;';
-                        }?>"><?php echo $row['expDate'];?> <?php if($row['expDate'] ){
-                            echo 'Days';  
-                        }elseif($row['expDate'] <= 0){
-                            echo 'Expired';
+                        <td id="exp" class="text-center">
+                        <?php
+                        
+                        $date = date('Y-m-d');
+
+                        if($row['expDate'] > $date){
+                            echo $row['dayLeft'];
+                        }else if($row['expDate'] = $date){
+                            echo '<span style="color: red;">Expired</span>';
                         }else{
-                            echo null;
+                            echo '<span style="color: red;">Expired</span>';
                         }
+                        
                         ?></td>
                         <td>
                             <a class="btn btn-danger my-3" href="action_delete_task.php?id=<?php echo $row['id']; ?>">

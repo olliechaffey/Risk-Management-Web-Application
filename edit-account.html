@@ -44,14 +44,14 @@
 
 </head>
 
-<body class="bg-1">
+<body class="bg-1" style="font-family: Lato, Arial;">
 
     <div id="wrapper" class="toggled">
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper" class="bg-2">
           <ul class="sidebar-nav">
-            <li class="sidebar-brand">
+            <li class="sidebar-brand ml-2">
                 <a href="#">
                     RM Tool v.1.0
                 </a>
@@ -68,6 +68,9 @@
                 <a href="newrisk.php"><i class="fa-solid fa-plus"></i> New Risk</a>
             </li>
             <li>
+                <a href="newasset.php"><i class="fa-solid fa-plus"></i> New Asset</a>
+            </li>
+            <li>
                 <a href="riskment.php"><i class="fa-solid fa-bolt"></i> Risk Register</a>
             </li>
             <li>
@@ -78,9 +81,6 @@
             </li>
             <li>
                 <a href="trends.php"><i class="fa-solid fa-arrow-trend-up"></i> Trends</a>
-            </li>
-            <li>
-                <a href="audit.php"><i class="fa-solid fa-file"></i> Audit</a>
             </li>
             <label class="nav-label">categories</label>
             <li>
@@ -93,9 +93,6 @@
                 <a href="high-risk.php"><i class="fa-solid fa-gauge-high"></i> High Risk</a>
             </li>
             <label class="nav-label">other</label>
-            <li>
-                <a href="settings.php"><i class="fa-solid fa-wrench"></i> Settings</a>
-            </li>
             <li>
                 <a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
             </li>
@@ -112,7 +109,7 @@
                 <div class="sub-heading title-ul">
                     <script src="scripts.js"></script>
                     <ol class="breadcrumb bg-transparent w-50 m-0 p-0">
-                      <li class="breadcrumb-item"><a href="#"><i class="fa-sharp fa-solid fa-house"></i></a></li>
+                      <li class="breadcrumb-item"><a href="index.php"><i class="fa-sharp fa-solid fa-house"></i></a></li>
                       <li class="breadcrumb-item" aria-current="page"><a href="user-account.php">My Account</a></li>
                       <li class="breadcrumb-item" aria-current="page">Edit Profile</li>
                     </ol>
@@ -125,21 +122,7 @@
                 <div class="py-3">
                 
                       <div class="row">
-                        <div class="col-xl-4">
-                            <!-- Profile picture card-->
-                            <div class="card mb-4 mb-xl-0 bg-2-border">
-                                <div class="card-header">Profile Picture</div>
-                                <div class="card-body text-center">
-                                    <!-- Profile picture image-->
-                                    <img class="img-account-profile rounded-circle mb-2" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
-                                    <!-- Profile picture help block-->
-                                    <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                                    <!-- Profile picture upload button-->
-                                    <button class="btn btn-primary" type="button">Upload new image</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-8">
+                        <div class="col">
                             <!-- Account details card-->
 
                             <?php
@@ -148,7 +131,7 @@
                         while ($row = mysqli_fetch_array($result)) {
                       ?>
 
-                            <div class="card mb-4 bg-2-border">
+                            <div class="card mb-4 bg-2-border" style="height:450px;">
                                 <div class="card-header">Account Details</div>
                                 <div class="card-body">
                                     <form id="insert-form" method="post" action="action_edit.php">

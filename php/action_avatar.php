@@ -2,13 +2,7 @@
 
 session_start();
 
-$uName = $_POST["username"];
-$name = $_POST["name"];
-$number = $_POST["number"];
-$country = $_POST["country"];
-$city = $_POST["city"];
-$email = $_POST["email"];
-$jobRole = $_POST["jobRole"];
+$avatar = $_POST["avatar"];
 
 if (!empty($_POST)) {
     $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
@@ -18,7 +12,7 @@ if (!empty($_POST)) {
     
     //$hashed = password_hash($password, PASSWORD_DEFAULT);
     
-    $sql = "UPDATE users SET usersName='$name', usersEmail='$email', usersUid='$uName', phoneNumber='$number', city='$city', country='$country', jobRole='$jobRole' WHERE usersId= '{$_SESSION['id']}'";
+    $sql = "INSERT INTO users ('avatar') VALUES ('.$avatar.') WHERE usersId= '{$_SESSION['id']}'";
     $result = mysqli_query($conn, $sql);
     echo "<script> location.href='edit-account.php'; </script>";
     exit;

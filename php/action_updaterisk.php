@@ -2,9 +2,10 @@
 
 session_start();
 
-$mitigation = $_POST["update_mitigation"];
-$assets = $_POST["update_asset"];
-$business = $_POST["update_business"];
+$id = $_POST['id'];
+$mitigation = $_POST['update_mitigation'];
+$assets = $_POST['update_asset'];
+$business = $_POST['update_business'];
 
 if (!empty($_POST)) {
     $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
@@ -12,12 +13,17 @@ if (!empty($_POST)) {
         die("connection failed: " . $conn->connect_error);
     }
     
-    //$hashed = password_hash($password, PASSWORD_DEFAULT);
-    
-    $sql = "UPDATE risk_assessment SET mitigation = '$mitigation', assets = '$assets', business = '$business'";
+    $sql = "UPDATE risk_assessment SET mitigation = '".$mitigation."', assets = '".$assets."', business = '".$business."' WHERE id = '".$id."'";
     $result = mysqli_query($conn, $sql);
-    echo '<script>alert("Table updated successfully")</script>';
-    echo "<script> location.href='riskment.php'; </script>";
+
+    if($result){
+        echo '<script>alert("Table updated successfully")</script>';
+        echo "<script> location.href='riskment.php'; </script>";
+    }
+    else{
+        echo '<script>alert("Table updated unsuccessfully")</script>';
+        echo "<script> location.href='riskment.php'; </script>";
+    }
     exit;
 }
 

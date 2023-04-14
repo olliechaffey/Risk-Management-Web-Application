@@ -22,6 +22,8 @@
     $result = mysqli_query($conn, $query);
     $queryRes = "SELECT status, count(*) as numberRes FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' OR risk_owner = '$username' GROUP BY status";
     $resultRes = mysqli_query($conn, $queryRes);
+    $queryR = "SELECT CAST(riskDate AS DATE) as riskDate, COUNT(CASE WHEN risk = 'Very Low' THEN 1 END) as 'Very Low', COUNT(CASE WHEN risk = 'Low' THEN 1 END) as 'Low', COUNT(CASE WHEN risk = 'Medium' THEN 1 END) as 'Medium', COUNT(CASE WHEN risk = 'High' THEN 1 END) as 'High', COUNT(CASE WHEN risk = 'Very High' THEN 1 END) as 'Very High', COUNT(CASE WHEN risk = 'Extreme' THEN 1 END) as 'Extreme' from risk_assessment GROUP BY CAST(riskDate AS DATE)";
+    $res = mysqli_query($conn, $queryR);
     ?>
 
 <!doctype html>
@@ -47,8 +49,10 @@
     <script type="text/javascript">
 
         google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.load('current', {'packages':['line']});
         google.charts.setOnLoadCallback(drawChart);
         google.charts.setOnLoadCallback(drawChartRes);
+        google.charts.setOnLoadCallback(drawChartLine);
 
         function drawChart() {
 
@@ -109,6 +113,45 @@
             var chart = new google.visualization.PieChart(document.getElementById('piechartRes'));
             chart.draw(data, options);
         }
+
+      function drawChartLine() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Date' ,'Very Low','Low', 'Medium', 'High', 'Very High', 'Extreme'],
+          <?php 
+          
+          while($data = mysqli_fetch_array($res)){
+            $date = $data['riskDate'];
+            $vlow = $data['Very Low'];
+            $low = $data['Low'];
+            $medium = $data['Medium'];
+            $high = $data['High'];
+            $vhigh = $data['Very High'];
+            $extreme = $data['Extreme'];
+            ?>
+            ['<?php echo $date;?>',<?php echo $vlow;?>,<?php echo $low;?>,<?php echo $medium;?>,<?php echo $high;?>,<?php echo $vhigh;?>,<?php echo $extreme;?>],
+          <?php
+         } 
+         ?>
+        ]);
+
+      var options = {
+        backgroundColor: '#222834',
+        vAxis: { title: 'Risk Count', viewWindow: { min: -0.25}, },
+        chartArea: {
+              'backgroundColor': {
+                  'fill': '#222834',
+                  'opacity': 100
+              },
+          },
+        width: 775,
+        height: 250
+      };
+
+      var chart = new google.charts.Line(document.getElementById('lineChart'));
+
+      chart.draw(data, google.charts.Line.convertOptions(options));
+    }
     </script>
 
 </head>
@@ -120,7 +163,7 @@
         <!-- Sidebar -->
         <div id="sidebar-wrapper" class="bg-2">
             <ul class="sidebar-nav">
-                <li class="sidebar-brand">
+                <li class="sidebar-brand ml-2">
                     <a href="#">
                         RM Tool v.1.0
                     </a>
@@ -151,9 +194,6 @@
                 <li>
                     <a href="trends.php"><i class="fa-solid fa-arrow-trend-up"></i> Trends</a>
                 </li>
-                <li>
-                    <a href="audit.php"><i class="fa-solid fa-file"></i> Audit</a>
-                </li>
                 <label class="nav-label">categories</label>
                 <li>
                     <a href="low-risk.php"><i class="fa-solid fa-gauge-simple"></i> Low Risk</a>
@@ -165,9 +205,6 @@
                     <a href="high-risk.php"><i class="fa-solid fa-gauge-high"></i> High Risk</a>
                 </li>
                 <label class="nav-label">other</label>
-                <li>
-                    <a href="settings.php"><i class="fa-solid fa-wrench"></i> Settings</a>
-                </li>
                 <li>
                     <a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                 </li>
@@ -191,7 +228,7 @@
 
                 <div class="card bg-primary mt-4">
                     <div class="card-body">
-                        <i class="fa-solid fa-circle-info"></i> Add some information here and make it collapsable.
+                        <i class="fa-solid fa-circle-info"></i> For more information about the web application please view the read me file <a href="https://github.com/olliechaffey/Final-Year-Project/blob/master/README.md" style="color: white;" target="_blank">here</a>.
                     </div>
                 </div>
 
@@ -202,7 +239,7 @@
                                 <?php
                                                     $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                                                 
-                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND risk='Low') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND risk='Low')";
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND risk IN('Very Low', 'Low')) UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND risk IN('Very Low', 'Low'))";
                                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
 
                                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
@@ -238,7 +275,7 @@
                                 <?php
                                                     $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                                                 
-                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND risk='High') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND risk='High')";
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND risk IN('Very High', 'High', 'Extreme')) UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND risk IN('Very High', 'High', 'Extreme'))";
                                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
 
                                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
@@ -275,15 +312,15 @@
                         <div class="col">
                             <div class="card bg-2-border text-white">
                                 <div class="card-header">
-                                <h3>Risk Wheel</h3>
+                                    <h3>Risk Wheel</h3>
+                                </div>
+                                    <div id="piechart" style="width: 100%; height: 200px;"></div>
+                                <div class="card-footer d-flex align-items-ceneter justify-content-between">
+                                    <a class="small text-white" href="assets.php">View Details</a>
+                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                </div>
                             </div>
-                            <div id="piechart" style="width: 100%; height: 200px;"></div>
-                            <div class="card-footer d-flex align-items-ceneter justify-content-between">
-                                <a class="small text-white stretched-link" href="assets.php">View Details</a>
-                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                            </div>
-                            </div>
-                    </div>
+                        </div>
                     <div class="col">
                             <div class="card bg-2-border text-white">
                                 <div class="card-header">
@@ -302,7 +339,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="medium-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -318,7 +355,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="medium-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -333,7 +370,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="high-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -348,7 +385,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="high-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -363,7 +400,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="high-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -380,7 +417,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="medium-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -395,7 +432,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="medium-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -410,7 +447,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="medium-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -425,7 +462,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="high-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -440,7 +477,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="high-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -457,7 +494,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="low-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -472,7 +509,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="medium-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -487,7 +524,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="medium-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -502,7 +539,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="medium-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -517,7 +554,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="high-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -534,7 +571,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="low-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -549,7 +586,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="low-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -564,7 +601,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="medium-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -579,7 +616,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="medium-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -594,7 +631,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="medium-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -611,7 +648,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="low-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -626,7 +663,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="low-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -641,7 +678,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="low-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -656,7 +693,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="medium-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -671,7 +708,7 @@
                                     $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
     
                                     if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
-                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                        echo '<a href="medium-risk.php" style="text-decoration: none; color: white;"><h2 class="mb-0"> '.$riskcount_total.' </h2></a>';
                                     }else{
                                         echo '<h2 class="mb-0"> </h2>';
                                     }
@@ -681,7 +718,7 @@
                                 </div>
                             </div>
                             <div class="card-footer d-flex align-items-ceneter justify-content-between">
-                                <a class="small text-white stretched-link" href="assets.php">View Details</a>
+                                <a class="small text-white" href="assets.php">View Details</a>
                                 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                             </div>
                         </div>
@@ -693,7 +730,7 @@
                             </div>
                             <div id="piechartRes" style="width: 100%; height: 200px;"></div>
                             <div class="card-footer d-flex align-items-ceneter justify-content-between">
-                                <a class="small text-white stretched-link" href="assets.php">View Details</a>
+                                <a class="small text-white" href="assets.php">View Details</a>
                                 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                             </div>
                             </div>
@@ -770,7 +807,7 @@
                                             </ul>
                                         </div>
                             <div class="card-footer d-flex align-items-ceneter justify-content-between">
-                                <a class="small text-white stretched-link" href="assets.php">View Details</a>
+                                <a class="small text-white" href="assets.php">View Details</a>
                                 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                             </div>
                         </div>
@@ -780,9 +817,9 @@
                                 <div class="card-header">
                                 <h3>Risk Health</h3>
                             </div>
-                            <div id="piechart" style="width: 100%; height: 250px;"></div>
+                            <div id="lineChart" style="width: 100%; height: 250px;"></div>
                             <div class="card-footer d-flex align-items-ceneter justify-content-between">
-                                <a class="small text-white stretched-link" href="assets.php">View Details</a>
+                                <a class="small text-white" href="assets.php">View Details</a>
                                 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                             </div>
                             </div>
@@ -812,7 +849,7 @@
                             </div>
 
                             <div class="card-footer d-flex align-items-ceneter justify-content-between">
-                                <a class="small text-white stretched-link" href="riskment.php">View Details</a>
+                                <a class="small text-white" href="riskment.php">View Details</a>
                                 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                             </div>
                         </div>

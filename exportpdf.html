@@ -1,0 +1,695 @@
+<?php
+    session_start();
+    include 'includes/dbh.inc.php';
+    include "includes/functions.inc.php";
+
+    if(!isset($_SESSION['useruid']))
+    {
+        header('Location: login.php');
+        exit();
+    }
+    $username = $_SESSION['useruid'];
+    $_SESSION['username'] = $username;
+    $teamcode = $_SESSION['teamid'];
+    $_SESSION['teamcode'] = $teamcode;
+?>
+
+<?php
+$query = "SELECT risk, count(*) as number FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' OR risk_owner = '$username' GROUP BY risk";
+$result = mysqli_query($conn, $query);
+$queryRes = "SELECT business, count(*) as numberRes FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' OR risk_owner = '$username' GROUP BY business";
+$resultRes = mysqli_query($conn, $queryRes);
+$queryR = "SELECT CAST(riskDate AS DATE) as riskDate, COUNT(CASE WHEN risk = 'Very Low' THEN 1 END) as 'Very Low', COUNT(CASE WHEN risk = 'Low' THEN 1 END) as 'Low', COUNT(CASE WHEN risk = 'Medium' THEN 1 END) as 'Medium', COUNT(CASE WHEN risk = 'High' THEN 1 END) as 'High', COUNT(CASE WHEN risk = 'Very High' THEN 1 END) as 'Very High', COUNT(CASE WHEN risk = 'Extreme' THEN 1 END) as 'Extreme' from risk_assessment GROUP BY CAST(riskDate AS DATE)";
+$res = mysqli_query($conn, $queryR);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <title>RM Tool v.1.0</title>
+    
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round|Open+Sans">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+        <script src="https://kit.fontawesome.com/8c8e392149.js" crossorigin="anonymous"></script>
+    
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js" integrity="sha512-YcsIPGdhPK4P/uRW6/sruonlYj+Q7UHWeKfTAkBW+g83NKM+jMJFJ4iAPfSnVp7BKD4dKMHmVSvICUbE/V1sSw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            google.charts.load('current', { 'packages': ['corechart'] });
+            google.charts.setOnLoadCallback(drawChart);
+            google.charts.setOnLoadCallback(drawChartRes);
+            google.charts.load('current', {'packages':['bar']});
+            google.charts.setOnLoadCallback(drawChartBar);
+    
+            function drawChart() {
+    
+                var data = google.visualization.arrayToDataTable([
+                    ['Risk', 'Number'],
+    
+              <?php
+    
+                while ($row = mysqli_fetch_array($result)) {
+                    echo "['".$row["risk"]."', ".$row["number"]."],";
+                }
+    
+              ?>
+    
+            ]);
+    
+                var options = {
+                    //title: 'Risk Pie Chart',
+                    pieHole: 0.3,
+                    backgroundColor: 'transparent',
+                    slices: [{ color: '#F99D9D' }, { color: '#7ABD6A' }, { color: '#DEAC61' }],
+                    //is3D: true,
+                    fontSize: ['12'],
+                    chartArea: { width: '100%', height: '100%' },
+                    legend: { textStyle: { color: 'black' } }
+                };
+    
+                var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+    
+                chart.draw(data, options);
+            }
+    
+            function drawChartRes() {
+    
+                var data = google.visualization.arrayToDataTable([
+                    ['Business', 'Number'],
+    
+              <?php
+    
+                while ($row = mysqli_fetch_array($resultRes)) {
+                    echo "['".$row["business"]."', ".$row["numberRes"]."],";
+                }
+    
+              ?>
+    
+            ]);
+    
+                var options = {
+                    //title: 'Risk Pie Chart',
+                    pieHole: 0.3,
+                    backgroundColor: 'transparent',
+                    // slices: [{ color: '#F99D9D' }, { color: '#7ABD6A' }, { color: '#DEAC61' }],
+                    //is3D: true,
+                    fontSize: ['12'],
+                    chartArea: { width: '100%', height: '100%' },
+                    legend: { textStyle: { color: 'black' } }
+                };
+    
+                var chart = new google.visualization.PieChart(document.getElementById('piechartRes'));
+    
+                chart.draw(data, options);
+            }
+    
+          function drawChartBar() {
+            var data = google.visualization.arrayToDataTable([
+              ['Date' ,'Very Low','Low', 'Medium', 'High', 'Very High', 'Extreme'],
+              <?php 
+              
+              while($data = mysqli_fetch_array($res)){
+                $date = $data['riskDate'];
+                $vlow = $data['Very Low'];
+                $low = $data['Low'];
+                $medium = $data['Medium'];
+                $high = $data['High'];
+                $vhigh = $data['Very High'];
+                $extreme = $data['Extreme'];
+                ?>
+                ['<?php echo $date;?>',<?php echo $vlow;?>,<?php echo $low;?>,<?php echo $medium;?>,<?php echo $high;?>,<?php echo $vhigh;?>,<?php echo $extreme;?>],
+              <?php
+             } 
+             ?>
+            ]);
+    
+            var options = {
+              vAxis: { title: 'Risk Count', viewWindow: { min: -0.25}, },
+              height: 500,
+              backgroundColor: '#222834',
+              chartArea: {
+                  'backgroundColor': {
+                      'fill': '#222834',
+                      'opacity': 100,
+                      width: '100%',
+                      height: '100%'
+                  },
+              },
+              bar: {groupWidth: "55%"},
+              colors: ['#7ABD6A', '#DEAC61', '#F99D9D'],
+              legend: { textStyle: { color: 'black' } }
+            };
+    
+            var chart = new google.charts.Bar(document.getElementById('chart_div'));
+            chart.draw(data, google.charts.Bar.convertOptions(options));
+          }
+        </script>
+    
+    </head>
+<body class="bg-2">
+
+    <div class="mt-4">
+        
+        <input type="button" onclick='exportPdf()' value="Download Report" class="downloadButton">
+    
+    </div>
+
+    <div id="exportPdf" style="color: black;">
+
+            <?php
+                    $select = "SELECT * FROM users WHERE usersUid = '$username'";
+                    $result = mysqli_query($conn, $select);
+                    while ($row = mysqli_fetch_array($result)) {
+            ?>
+        
+            <div class="head">
+            
+                <h3 class="mb-3">RM Tool V.1.0</h3>
+                <p>Date:
+                    <?php echo date("h:i:sa"); ?>
+                </p>
+                <p>Users Name:
+                    <?php echo $_SESSION['username'] ?>
+                </p>
+                <p>Team Code:
+                    <?php echo $_SESSION['teamcode'] ?>
+                </p>
+                <p>Email:
+                    <?php echo $row['usersEmail'] ?>
+                </p>
+                <p>Location:
+                    <?php echo $row['city'] ?>
+                </p>
+            
+            </div>
+
+            <?php } ?>
+
+            <div class="heatmap">
+                
+                <h5 class="mt-5">Heatmap/Risk Register:</h5>
+
+                <div class="heat-map">
+                    <small style="font-style: italic;">This heatmap/risk register helps track potential risks across the company, comparing the likelihood x impact of the risk.</small>
+                    
+                    <div class="grid justify-content-center mt-1">
+                                            <div class="row" style="width: 300px; height: 38px;">
+                                                <div class="col d-flex justify-content-center align-items-center" id="1"
+                                                    style="background-color: #DBD06D;">
+                                                    <a href="#">
+                                                        <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Very Low' AND likelihood='Very Likely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Very Low' AND likelihood='Very Likely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                    </a>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="2"
+                                                    style="background-color: #F3BE6D;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Low' AND likelihood='Very Likely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Low' AND likelihood='Very Likely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="3"
+                                                    style="background-color: #F36969;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Medium' AND likelihood='Very Likely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Medium' AND likelihood='Very Likely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="4"
+                                                    style="background-color: #DB3F3F;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='High' AND likelihood='Very Likely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='High' AND likelihood='Very Likely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="5"
+                                                    style="background-color: #FF0000;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Very High' AND likelihood='Very Likely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Very High' AND likelihood='Very Likely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="width: 300px; height: 38px;">
+                                                <div class="col d-flex justify-content-center align-items-center" id="1"
+                                                    style="background-color: #A9BC5F;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Very Low' AND likelihood='Likely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Very Low' AND likelihood='Likely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="2"
+                                                    style="background-color: #DBD06D;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Low' AND likelihood='Likely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Low' AND likelihood='Likely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="3"
+                                                    style="background-color: #F3BE6D;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Medium' AND likelihood='Likely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Medium' AND likelihood='Likely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="4"
+                                                    style="background-color: #F36969;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='High' AND likelihood='Likely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='High' AND likelihood='Likely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="5"
+                                                    style="background-color: #DB3F3F;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Very High' AND likelihood='Likely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Very High' AND likelihood='Likely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="width: 300px; height: 38px;">
+                                                <div class="col d-flex justify-content-center align-items-center" id="1"
+                                                    style="background-color: #69CD59;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Very Low' AND likelihood='Possible') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Very Low' AND likelihood='Possible')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="2"
+                                                    style="background-color: #A9BC5F;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Low' AND likelihood='Possible') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Low' AND likelihood='Possible')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="3"
+                                                    style="background-color: #DBD06D;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Medium' AND likelihood='Possible') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Medium' AND likelihood='Possible')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="4"
+                                                    style="background-color: #F3BE6D;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='High' AND likelihood='Possible') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='High' AND likelihood='Possible')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="5"
+                                                    style="background-color: #F36969;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Very High' AND likelihood='Possible') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Very High' AND likelihood='Possible')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="width: 300px; height: 38px;">
+                                                <div class="col d-flex justify-content-center align-items-center" id="1"
+                                                    style="background-color: #399B29;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Very Low' AND likelihood='Unlikely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Very Low' AND likelihood='Unlikely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="2"
+                                                    style="background-color: #69CD59;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Low' AND likelihood='Unlikely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Low' AND likelihood='Unlikely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="3"
+                                                    style="background-color: #A9BC5F;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Medium' AND likelihood='Unlikely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Medium' AND likelihood='Unlikely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="4"
+                                                    style="background-color: #DBD06D;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='High' AND likelihood='Unlikely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='High' AND likelihood='Unlikely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="5"
+                                                    style="background-color: #F3BE6D;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Very High' AND likelihood='Unlikely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Very High' AND likelihood='Unlikely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="width: 300px; height: 38px;">
+                                                <div class="col d-flex justify-content-center align-items-center" id="1"
+                                                    style="background-color: #05691B;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Very Low' AND likelihood='Very Unlikely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Very Low' AND likelihood='Very Unlikely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="2"
+                                                    style="background-color: #399B29;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Low' AND likelihood='Very Unlikely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Low' AND likelihood='Very Unlikely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="3"
+                                                    style="background-color: #69CD59;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Medium' AND likelihood='Very Unlikely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Medium' AND likelihood='Very Unlikely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="4"
+                                                    style="background-color: #A9BC5F;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='High' AND likelihood='Very Unlikely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='High' AND likelihood='Very Unlikely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                                <div class="col d-flex justify-content-center align-items-center" id="5"
+                                                    style="background-color: #DBD06D;">
+                                                    <?php
+                                                    $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
+                                                
+                                                    $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND impact='Very High' AND likelihood='Very Unlikely') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND impact='Very High' AND likelihood='Very Unlikely')";
+                                                    $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
+                    
+                                                    if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
+                                                        echo '<h2 class="mb-0"> '.$riskcount_total.' </h2>';
+                                                    }else{
+                                                        echo '<h2 class="mb-0"> </h2>';
+                                                    }
+                                                ?>
+                                                </div>
+                                            </div>
+                                        </div>   
+                    
+                </div>
+                
+            </div>
+
+            <div class="risk-total">
+            
+                <h5 class="mt-5">Total Risks Identified:</h5>
+
+                <?php
+                    $select = "(SELECT COUNT(risk) AS risk FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND risk IN ('Very Low', 'Low')) UNION (SELECT COUNT(risk) AS risk FROM risk_assessment WHERE risk_owner = '$username' AND risk IN ('Very Low', 'Low'))";
+                    $result = mysqli_query($conn, $select);
+                    while ($row = mysqli_fetch_array($result)) {
+                ?>
+
+                <p>Low Risks:
+                    <?php echo $row['risk']; ?>
+                </p>
+
+                <?php } ?>
+
+                <?php
+                    $select = "(SELECT COUNT(risk) AS risk FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND risk='Medium') UNION (SELECT COUNT(risk) AS risk FROM risk_assessment WHERE risk_owner = '$username' AND risk='Medium')";
+                    $result = mysqli_query($conn, $select);
+                    while ($row = mysqli_fetch_array($result)) {
+                ?>
+
+                <p>Medium Risks:
+                    <?php echo $row['risk']; ?>
+                </p>
+
+                <?php } ?>
+
+                <?php
+                    $select = "(SELECT COUNT(risk) AS risk FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND risk IN ('Very High', 'High', 'Extreme')) UNION (SELECT COUNT(risk) AS risk FROM risk_assessment WHERE risk_owner = '$username' AND risk IN ('Very High', 'High', 'Extreme'))";
+                    $result = mysqli_query($conn, $select);
+                    while ($row = mysqli_fetch_array($result)) {
+                ?>
+
+                <p>High Risks:
+                    <?php echo $row['risk']; ?>
+                </p>
+
+                <?php } ?>
+
+                <?php
+                    $select = "(SELECT COUNT(risk) AS risk FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '') UNION (SELECT COUNT(risk) AS risk FROM risk_assessment WHERE risk_owner = '$username')";
+                    $result = mysqli_query($conn, $select);
+                    while ($row = mysqli_fetch_array($result)) {
+                ?>
+
+                <p>Total Risks:
+                    <?php echo $row['risk']; ?>
+                </p>
+
+                <?php } ?>
+
+            </div>
+
+        </br>
+        </br>
+        </br>
+        </br>
+        </br>
+        </br>
+
+            <div class="graphs">
+                
+                <h5 class="mt-5">Graphical Data:</h5>
+
+                <div class="risk-wheel">
+
+                    <p>Risk Wheel:</p>
+                    <small style="font-style: italic;">This data presents the percentage of risk status' across the total risks identified.</small>
+                    
+                    <div class="mt-2" id="piechart" style="width: 25%; height: 200px;"></div>    
+                    
+                </div>
+            </br>
+                <div class="business-wheel">
+                
+                    <p>Business Areas At Risk:</p>
+                    <small style="font-style: italic;">This data presents the percentage of risks across the business that are related to specific business areas.</small>
+                
+                    <div class="mt-2" id="piechartRes" style="width: 25%; height: 200px;"></div>
+                
+                </div>
+                
+            </div>
+    
+    </div>
+
+    <script src="convertpdf.js"></script>
+    <script src="scripts.js"></script>
+    
+</body>
+</html>

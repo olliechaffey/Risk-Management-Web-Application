@@ -8,6 +8,13 @@
         header('Location: login.php');
         exit();
     }
+
+    $username = $_SESSION['useruid'];
+    $_SESSION['username'] = $username;
+    $teamcode = $_SESSION['teamid'];
+    $_SESSION['teamcode'] = $teamcode;
+    $id = $_SESSION['userid'];
+    $_SESSION['id'] = $id;
 ?> 
 
 <!doctype html>
@@ -58,14 +65,14 @@
     </script>
 </head>
 
-<body class="bg-1">
+<body class="bg-1" style="font-family: Lato, Arial;">
 
     <div id="wrapper" class="toggled">
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper" class="bg-2">
             <ul class="sidebar-nav">
-                <li class="sidebar-brand">
+                <li class="sidebar-brand ml-2">
                     <a href="#">
                         RM Tool v.1.0
                     </a>
@@ -82,6 +89,9 @@
                     <a href="newrisk.php"><i class="fa-solid fa-plus"></i> New Risk</a>
                 </li>
                 <li>
+                    <a href="newasset.php"><i class="fa-solid fa-plus"></i> New Asset</a>
+                </li>
+                <li>
                     <a href="riskment.php"><i class="fa-solid fa-bolt"></i> Risk Register</a>
                 </li>
                 <li>
@@ -92,9 +102,6 @@
                 </li>
                 <li>
                     <a href="trends.php"><i class="fa-solid fa-arrow-trend-up"></i> Trends</a>
-                </li>
-                <li>
-                    <a href="audit.php"><i class="fa-solid fa-file"></i> Audit</a>
                 </li>
                 <label class="nav-label">categories</label>
                 <li>
@@ -108,9 +115,6 @@
                 </li>
                 <label class="nav-label">other</label>
                 <li>
-                    <a href="settings.php"><i class="fa-solid fa-wrench"></i> Settings</a>
-                </li>
-                <li>
                     <a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                 </li>
             </ul>
@@ -123,16 +127,21 @@
 
                 <h1 class="heading">Medium Risk Vulnerabilities</h1>
                 <span id="live-date" class="hovertext" data-hover="MM/DD/YYYY"></span>
-                <script src="scripts.js"></script>
-                <h6 class="sub-heading title-ul">Determine the correct approach to defend medium risk vulnerabilities.</h6>
+                <div class="sub-heading title-ul">
+                    <script src="scripts.js"></script>
+                    <ol class="breadcrumb bg-transparent w-50 m-0 p-0">
+                        <li class="breadcrumb-item"><a href="index.php"><i class="fa-sharp fa-solid fa-house"></i></a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Medium Risk Vulnerabilities</li>
+                    </ol>
+                </div>
 
                 <div>
-                    <div class="card bg-dark text-white mt-3">
-                        <div class="card-body">Current total medium risk:
+                    <div class="card bg-2-border text-white mt-3">
+                        <div class="card-body" style="border-width: 1rem; border-bottom: solid #f0ad4e; border-bottom-left-radius: 1%; border-bottom-right-radius: 1%;">Current total medium risk:
                             <?php
                                             $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                                         
-                                            $dash_riskcount_query = "SELECT * from risk_assessment where risk='Medium'";
+                                            $dash_riskcount_query = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND risk='Medium') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND risk='Medium')";
                                             $dash_riskcount_query_run = mysqli_query($conn, $dash_riskcount_query);
 
                                             if($riskcount_total = mysqli_num_rows($dash_riskcount_query_run)){
@@ -145,7 +154,7 @@
                     </div>
                 </div>
 
-                <table class="table rounded table-striped table-dark table-responsive-md mt-4 table-hover">
+                <table class="my-table mt-4">
                     <thead>
                     <tr>
                         <th class="text-center" width="5%" scope="col">ID</th>
@@ -161,7 +170,7 @@
                     <?php
                         $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
                     
-                        $select = "SELECT * FROM risk_assessment where risk='Medium' ORDER BY id DESC";
+                        $select = "(SELECT * FROM risk_assessment WHERE teamId = '$teamcode' AND NOT teamId = '' AND risk='Medium') UNION (SELECT * FROM risk_assessment WHERE risk_owner = '$username' AND risk='Medium')";
                         $result = mysqli_query($conn, $select);
                         while ($row = mysqli_fetch_array($result)) {
                     ?>
