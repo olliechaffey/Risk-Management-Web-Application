@@ -2,14 +2,14 @@
 
 session_start();
 
-$name = $_POST["name"];
-$category = $_POST["category"];
-$product_name = $_POST["prodName"];
-$status = $_POST["status"];
-$location = $_POST["location"];
-$version = $_POST["version"];
-$vendor = $_POST["vendor"];
-$assignedTo = $_POST["assignedTo"];
+$name = htmlspecialchars($_POST["name"]);
+$category = htmlspecialchars($_POST["category"]);
+$product_name = htmlspecialchars($_POST["prodName"]);
+$status = htmlspecialchars($_POST["status"]);
+$location = htmlspecialchars($_POST["location"]);
+$version = htmlspecialchars($_POST["version"]);
+$vendor = htmlspecialchars($_POST["vendor"]);
+$assignedTo = htmlspecialchars($_POST["assignedTo"]);
 
 if (!empty($_POST)) {
     $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");

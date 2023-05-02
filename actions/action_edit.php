@@ -2,13 +2,13 @@
 
 session_start();
 
-$uName = $_POST["username"];
-$name = $_POST["name"];
-$number = $_POST["number"];
-$country = $_POST["country"];
-$city = $_POST["city"];
-$email = $_POST["email"];
-$jobRole = $_POST["jobRole"];
+$uName = htmlspecialchars($_POST["username"]);
+$name = htmlspecialchars($_POST["name"]);
+$number = htmlspecialchars($_POST["number"]);
+$country = htmlspecialchars($_POST["country"]);
+$city = htmlspecialchars($_POST["city"]);
+$email = htmlspecialchars($_POST["email"]);
+$jobRole = htmlspecialchars($_POST["jobRole"]);
 
 if (!empty($_POST)) {
     $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");

@@ -2,7 +2,8 @@
 
 session_start();
 
-$avatar = $_POST["avatar"];
+$id = htmlspecialchars($_POST["id"]);
+
 
 if (!empty($_POST)) {
     $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");
@@ -12,9 +13,10 @@ if (!empty($_POST)) {
     
     //$hashed = password_hash($password, PASSWORD_DEFAULT);
     
-    $sql = "INSERT INTO users ('avatar') VALUES ('.$avatar.') WHERE usersId= '{$_SESSION['id']}'";
+    $sql = "DELETE FROM company_assets WHERE id='$id'";
     $result = mysqli_query($conn, $sql);
-    echo "<script> location.href='edit-account.php'; </script>";
+    echo "<script> location.href='assets.php'; </script>";
     exit;
 }
+
 ?>

@@ -199,7 +199,7 @@
                     ?>
         
                     <tr>
-                        <th><?php echo $row['id']; ?></td>
+                        <th><?php echo $row['id']; ?></th>
                         <td><?php echo $row['name']; ?></td>
                         <td><?php echo $row['status']; ?></td>
                         <td><p class="<?php if($row['category'] == 'Hardware'){

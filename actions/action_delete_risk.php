@@ -1,6 +1,6 @@
 <?php
 
-$id = $_POST["id"];
+$id = htmlspecialchars($_POST["id"]);
 
 if (!empty($_POST)) {
     $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");

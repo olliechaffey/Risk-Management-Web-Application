@@ -2,10 +2,10 @@
 
 session_start();
 
-$id = $_POST['id'];
-$mitigation = $_POST['update_mitigation'];
-$assets = $_POST['update_asset'];
-$business = $_POST['update_business'];
+$id = htmlspecialchars($_POST['id']);
+$mitigation = htmlspecialchars($_POST['update_mitigation']);
+$assets = htmlspecialchars($_POST['update_asset']);
+$business = htmlspecialchars($_POST['update_business']);
 
 if (!empty($_POST)) {
     $conn = new mysqli("localhost", "oc277_ciso_user", "Yevtak2d", "oc277_finalyear");

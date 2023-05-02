@@ -2,17 +2,17 @@
 
 session_start();
 
-$title = $_POST["title"];
-$status = $_POST["status"];
-$task = $_POST["task"];
-$impact = $_POST["impact"];
-$likelihood = $_POST["likelihood"];
+$title = htmlspecialchars($_POST["title"]);
+$status = htmlspecialchars($_POST["status"]);
+$task = htmlspecialchars($_POST["task"]);
+$impact = htmlspecialchars($_POST["impact"]);
+$likelihood = htmlspecialchars($_POST["likelihood"]);
 $risk = "";
-$expDate = $_POST["expDate"];
-$mitigation = $_POST["mitigation"];
-$assets = $_POST["assets"];
-$business = $_POST["business"];
-$assign = $_POST["assignedTo"];
+$expDate = htmlspecialchars($_POST["expDate"]);
+$mitigation = htmlspecialchars($_POST["mitigation"]);
+$assets = htmlspecialchars($_POST["assets"]);
+$business = htmlspecialchars($_POST["business"]);
+$assign = htmlspecialchars($_POST["assignedTo"]);
 
 if($impact == 'Very Low' && $likelihood == 'Very Unlikely'){
     $risk = "Very Low";
