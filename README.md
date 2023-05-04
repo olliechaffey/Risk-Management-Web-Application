@@ -31,4 +31,3 @@ Signing in will redirect you to the Dashboard. Here the user can use the navigat
 - Then change the status of this risk in the risk treatment section
 - Then go to back to the Dashboard where the 'Response' wheel will update
 - Then the user should attempt to create an Audit where a PDF document should download and present the current data
-- 
