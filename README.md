@@ -3,9 +3,9 @@
 This cyber risk management web application was built with HTML, [Bootstrap CSS Framework](https://getbootstrap.com), Javascript, and PHP.
 
 
-### To Use The App
+## To Use The App
 
-[Click here] to be redirected to the web application.
+[Click here](https://oc277.brighton.domains/fyp/login.php) to be redirected to the web application.
 
 Use the following login credentials where a 'mock' account has been created to visualise the application in use.
 - Username `mockaccount`
