@@ -1,4 +1,4 @@
-# RM v.10 - Oliver Chaffey Final Year Project
+# RM v.1.0 - Oliver Chaffey Final Year Project
 
 This cyber risk management web application was built with HTML, [Bootstrap CSS Framework](https://getbootstrap.com), Javascript, and PHP.
 
