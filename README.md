@@ -8,8 +8,8 @@ This cyber risk management web application was built with HTML, [Bootstrap CSS F
 [Click here] to be redirected to the web application.
 
 Use the following login credentials where a 'mock' account has been created to visualise the application in use.
-Username `mockaccount`
-Password `brighton`
+- Username `mockaccount`
+- Password `brighton`
 
 ## Tasks
 Signing in will redirect you to the Dashboard. Here the user can use the navigation bar to either:
