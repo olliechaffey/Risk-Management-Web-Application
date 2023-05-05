@@ -64,7 +64,7 @@ function uidExists($conn, $username){
 }
 
 function createUser($conn, $name, $email, $username, $team, $pwd){
-    $sql = "INSERT INTO users (usersName, usersEmail, usersUid, teamId, usersPwd) VALUES (?,?,?,?,?);"; //sql injection by filling in the blanks 1:07 video
+    $sql = "INSERT INTO users (usersName, usersEmail, usersUid, teamId, usersPwd) VALUES (?,?,?,?,?);";
     $stmt = mysqli_stmt_init($conn);
     if (!mysqli_stmt_prepare($stmt, $sql)){
         header("location: ../signup.php?error=stmtfailed");
